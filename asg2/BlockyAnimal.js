@@ -71,4 +71,13 @@ function initProgram() {
         console.error('Failed to get the storage location of u_FragColor');
         return;
     }
+
+    // -------------------------
+    // Other Setup
+    // -------------------------
+
+    gl.enable(gl.DEPTH_TEST);
+
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 }
