@@ -9,6 +9,7 @@ void main()
 
 // Fragment Shader Source GLSL ES
 let FSHADER_SOURCE = `
+precision mediump float;
 uniform vec4 u_FragColor;
 void main()
 {
@@ -35,6 +36,10 @@ function initProgram() {
     // --------------------------
 
     canvas = document.getElementById("webgl");
+    if (!canvas) {
+        console.error('Failed to get the canvas element');
+        return;
+    }
     
     gl = getWebGLContext(canvas);
     if (!gl) {
@@ -63,7 +68,7 @@ function initProgram() {
 
     u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
     if (!u_FragColor) {
-        console.log('Failed to get the storage location of u_FragColor');
+        console.error('Failed to get the storage location of u_FragColor');
         return;
     }
 }
