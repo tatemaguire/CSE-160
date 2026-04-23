@@ -1,10 +1,11 @@
 // Vertex Shader Source GLSL ES
 let VSHADER_SOURCE = `
-attribute vec4 a_Position;
+uniform mat4 u_GlobalRotation;
 uniform mat4 u_ModelMatrix;
+attribute vec4 a_Position;
 void main()
 {
-    gl_Position = u_ModelMatrix * a_Position;
+    gl_Position = u_GlobalRotation * u_ModelMatrix * a_Position;
 }
 `;
 
@@ -53,15 +54,47 @@ let gl;
 // Shader Variable Locations
 let a_Position;
 let u_FragColor;
+let u_ModelMatrix;
+let u_GlobalRotation;
 
 // Buffer Locations
 let cube_array_buffer;
 let cube_element_buffer;
 
+// Global Values
+let global_rotation_matrix = new Matrix4();
+
+
+// *************************
+// Page Setup
+// *************************
+
 
 function main() {
     initProgram();
     initBuffers();
+
+    let globalRotationInput = document.getElementById("globalRotationInput");
+    globalRotationInput.value = 180;
+    globalRotationInput.addEventListener("input", updateGlobalRotation);
+
+    drawTestCube();
+}
+
+
+// Get current input, set rotation matrix
+function updateGlobalRotation(event) {
+    let angle = event.target.value;
+    angle -= 180;
+
+    global_rotation_matrix = new Matrix4();
+    global_rotation_matrix.rotate(angle, 0, 1, 0.2);
+
+    drawTestCube();
+}
+
+function drawTestCube() {
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     let M = new Matrix4();
     M.setScale(0.5, 1, 1);
@@ -69,6 +102,11 @@ function main() {
 
     drawCube(M);
 }
+
+
+// *************************
+// WebGL Rendering
+// *************************
 
 
 // Sets up canvas, gl, and gets shader variable locations
@@ -117,6 +155,12 @@ function initProgram() {
     u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
     if (!u_ModelMatrix) {
         console.error('Failed to get the storage location of u_ModelMatrix');
+        return;
+    }
+
+    u_GlobalRotation = gl.getUniformLocation(gl.program, 'u_GlobalRotation');
+    if (!u_GlobalRotation) {
+        console.error('Failed to get the storage location of u_GlobalRotation');
         return;
     }
 
@@ -174,6 +218,7 @@ function drawCube(matrix) {
     // Set uniform variables
     gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 1.0);
     gl.uniformMatrix4fv(u_ModelMatrix, false, matrix.elements);
+    gl.uniformMatrix4fv(u_GlobalRotation, false, global_rotation_matrix.elements);
 
     // Draw cube according to position indices in cube_element_buffer
     gl.drawElements(gl.TRIANGLES, cubeFaces.length, gl.UNSIGNED_BYTE, 0);
