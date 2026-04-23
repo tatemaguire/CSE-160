@@ -1,9 +1,10 @@
 // Vertex Shader Source GLSL ES
 let VSHADER_SOURCE = `
 attribute vec4 a_Position;
+uniform mat4 u_ModelMatrix;
 void main()
 {
-    gl_Position = a_Position;
+    gl_Position = u_ModelMatrix * a_Position;
 }
 `;
 
@@ -61,7 +62,12 @@ let cube_element_buffer;
 function main() {
     initProgram();
     initBuffers();
-    drawCube();
+
+    let M = new Matrix4();
+    M.setScale(0.5, 1, 1);
+    M.rotate(25, 1, 1, 0);
+
+    drawCube(M);
 }
 
 
@@ -108,6 +114,12 @@ function initProgram() {
         return;
     }
 
+    u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
+    if (!u_ModelMatrix) {
+        console.error('Failed to get the storage location of u_ModelMatrix');
+        return;
+    }
+
     // -------------------------
     // Other Setup
     // -------------------------
@@ -150,7 +162,7 @@ function initBuffers() {
 
 
 // Draw a Cube
-function drawCube() {
+function drawCube(matrix) {
     // Only necessary if cube wasn't the last thing drawn
     gl.bindBuffer(gl.ARRAY_BUFFER, cube_array_buffer);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube_element_buffer);
@@ -161,6 +173,7 @@ function drawCube() {
 
     // Set uniform variables
     gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 1.0);
+    gl.uniformMatrix4fv(u_ModelMatrix, false, matrix.elements);
 
     // Draw cube according to position indices in cube_element_buffer
     gl.drawElements(gl.TRIANGLES, cubeFaces.length, gl.UNSIGNED_BYTE, 0);
