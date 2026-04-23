@@ -96,18 +96,6 @@ function updateGlobalRotation(event) {
 }
 
 
-// Render the entire scene
-function renderScene() {
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    let M = new Matrix4();
-    M.setScale(0.5, 1, 1);
-    M.rotate(25, 1, 1, 0);
-
-    drawCube(M);
-}
-
-
 // *************************
 // WebGL Rendering
 // *************************
@@ -210,8 +198,27 @@ function initBuffers() {
 
 
 // Draw a Cube
-function drawCube(matrix) {
-    // Only necessary if cube wasn't the last thing drawn
+function drawCube(matrix, color) {
+    // Set uniform variables
+    gl.uniform4f(u_FragColor, color[0], color[1], color[2], color[3]);
+    gl.uniformMatrix4fv(u_ModelMatrix, false, matrix.elements);
+    gl.uniformMatrix4fv(u_GlobalRotation, false, global_rotation_matrix.elements);
+
+    // Draw cube according to position indices in cube_element_buffer
+    gl.drawElements(gl.TRIANGLES, cubeFaces.length, gl.UNSIGNED_BYTE, 0);
+}
+
+
+// Render the entire scene
+function renderScene() {
+    // ----------------------
+    // Render Preparation
+    // ----------------------
+
+    // Clear screen
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Bind buffers to cube data
     gl.bindBuffer(gl.ARRAY_BUFFER, cube_array_buffer);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube_element_buffer);
 
@@ -219,11 +226,22 @@ function drawCube(matrix) {
     gl.enableVertexAttribArray(a_Position);
     gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
 
-    // Set uniform variables
-    gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 1.0);
-    gl.uniformMatrix4fv(u_ModelMatrix, false, matrix.elements);
-    gl.uniformMatrix4fv(u_GlobalRotation, false, global_rotation_matrix.elements);
+    // ----------------------
+    // Draw Ankylosaurus
+    // ----------------------
 
-    // Draw cube according to position indices in cube_element_buffer
-    gl.drawElements(gl.TRIANGLES, cubeFaces.length, gl.UNSIGNED_BYTE, 0);
+    let M = new Matrix4();
+    M.setScale(0.5, 1, 1);
+    M.rotate(25, 1, 1, 0);
+
+    let blue = [0.0, 0.5, 0.8, 1.0];
+
+    drawCube(M, blue);
+
+    M.setIdentity();
+    M.translate(0.5, 0.5, 0.5);
+    M.scale(0.1, 0.5, 0.2);
+    M.rotate(18, 0.5, 0.2, 0.1);
+
+    drawCube(M, blue);
 }
