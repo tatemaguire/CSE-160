@@ -74,26 +74,30 @@ function main() {
     initProgram();
     initBuffers();
 
+    // Setup input
     let globalRotationInput = document.getElementById("globalRotationInput");
     globalRotationInput.value = 180;
     globalRotationInput.addEventListener("input", updateGlobalRotation);
 
-    drawTestCube();
+    renderScene();
 }
 
 
 // Get current input, set rotation matrix
 function updateGlobalRotation(event) {
     let angle = event.target.value;
+    // set angle range from -180 to 180
     angle -= 180;
 
     global_rotation_matrix = new Matrix4();
     global_rotation_matrix.rotate(angle, 0, 1, 0.2);
 
-    drawTestCube();
+    renderScene();
 }
 
-function drawTestCube() {
+
+// Render the entire scene
+function renderScene() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     let M = new Matrix4();
