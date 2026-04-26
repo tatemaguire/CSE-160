@@ -68,7 +68,8 @@ let cube_element_buffer;
 
 // Global Values
 let global_rotation_matrix = new Matrix4();
-let upperLegJointAngle = 0;
+let thighJointAngle = 0;
+let calfJointAngle = 0;
 
 
 // *************************
@@ -85,9 +86,13 @@ function main() {
     globalRotationInput.addEventListener("input", updateGlobalRotation);
     updateGlobalRotation({ target: globalRotationInput });
 
-    let upperLegJointInput = document.getElementById("upperLegJointInput");
-    upperLegJointInput.addEventListener("input", updateUpperLegJoint);
-    updateUpperLegJoint({ target: upperLegJointInput });
+    let thighJointInput = document.getElementById("thighJointInput");
+    thighJointInput.addEventListener("input", updateThighJoint);
+    updateThighJoint({ target: thighJointInput });
+
+    let calfJointInput = document.getElementById("calfJointInput");
+    calfJointInput.addEventListener("input", updateCalfJoint);
+    updateCalfJoint({ target: calfJointInput });
 
     renderScene();
 }
@@ -104,10 +109,18 @@ function updateGlobalRotation(event) {
     renderScene();
 }
 
-function updateUpperLegJoint(event) {
+function updateThighJoint(event) {
     let angle = event.target.value;
 
-    upperLegJointAngle = angle;
+    thighJointAngle = angle;
+
+    renderScene();
+}
+
+function updateCalfJoint(event) {
+    let angle = event.target.value;
+
+    calfJointAngle = angle;
 
     renderScene();
 }
@@ -285,15 +298,18 @@ function renderScene() {
 
     // Back Right Leg
 
-    // Upper Leg
+    // Thigh
     M.setTranslate(-0.3, -0.2, -0.31);
-    rotateAround(M, upperLegJointAngle, 0, 0, 1, 0, 0.125, 0);
+    rotateAround(M, thighJointAngle, 0, 0, 1, 0, 0.125, 0);
+    let unscaled_M = new Matrix4(M);
     M.scale(0.2, 0.25, 0.2);
     drawCube(M, BLUE);
 
-    // Lower Leg
-    // rotateAround(M, 15, 0, 0, 1, -0.3, -0.3, -0.3);
-    M.setTranslate(-0.3, -0.4, -0.3);
+    // Calf
+    M = unscaled_M;
+    rotateAround(M, calfJointAngle, 0, 0, 1, 0, -0.1, 0);
+    M.translate(0, -0.2, 0);
+    // unscaled_M = new Matrix4(M);
     M.scale(0.15, 0.2, 0.15);
     drawCube(M, BLUE);
 
