@@ -95,6 +95,10 @@ function main() {
     calfJointInput.addEventListener("input", updateCalfJoint);
     updateCalfJoint({ target: calfJointInput });
 
+    let footJointInput = document.getElementById("footJointInput");
+    footJointInput.addEventListener("input", updateFootJoint);
+    updateFootJoint({ target: footJointInput });
+
     renderScene();
 }
 
@@ -111,18 +115,17 @@ function updateGlobalRotation(event) {
 }
 
 function updateThighJoint(event) {
-    let angle = event.target.value;
-
-    thighJointAngle = angle;
-
+    thighJointAngle = event.target.value;
     renderScene();
 }
 
 function updateCalfJoint(event) {
-    let angle = event.target.value;
+    calfJointAngle = event.target.value;
+    renderScene();
+}
 
-    calfJointAngle = angle;
-
+function updateFootJoint(event) {
+    footJointAngle = event.target.value;
     renderScene();
 }
 
