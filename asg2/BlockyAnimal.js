@@ -70,6 +70,7 @@ let cube_element_buffer;
 let global_rotation_matrix = new Matrix4();
 let thighJointAngle = 0;
 let calfJointAngle = 0;
+let footJointAngle = 0;
 
 
 // *************************
@@ -309,12 +310,14 @@ function renderScene() {
     M = unscaled_M;
     rotateAround(M, calfJointAngle, 0, 0, 1, 0, -0.1, 0);
     M.translate(0, -0.2, 0);
-    // unscaled_M = new Matrix4(M);
+    unscaled_M = new Matrix4(M);
     M.scale(0.15, 0.2, 0.15);
     drawCube(M, BLUE);
 
     // Foot
-    M.setTranslate(-0.25, -0.5, -0.3);
+    M = unscaled_M;
+    rotateAround(M, footJointAngle, 0,0,1, 0,-0.1,0);
+    M.translate(0.05, -0.1, 0);
     M.scale(0.25, 0.1, 0.15);
     drawCube(M, BLUE);
 
