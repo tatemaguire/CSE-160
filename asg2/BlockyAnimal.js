@@ -68,6 +68,7 @@ let cube_element_buffer;
 
 // Global Values
 let global_rotation_matrix = new Matrix4();
+let upperLegJointAngle = 0;
 
 
 // *************************
@@ -84,6 +85,10 @@ function main() {
     globalRotationInput.addEventListener("input", updateGlobalRotation);
     updateGlobalRotation({ target: globalRotationInput });
 
+    let upperLegJointInput = document.getElementById("upperLegJointInput");
+    upperLegJointInput.addEventListener("input", updateUpperLegJoint);
+    updateUpperLegJoint({ target: upperLegJointInput });
+
     renderScene();
 }
 
@@ -91,9 +96,7 @@ function main() {
 // Get current input, set rotation matrix
 function updateGlobalRotation(event) {
     let angle = event.target.value;
-    // set angle range from -180 to 180
-    angle -= 180;
-    angle *= -1;
+    angle = -angle;
 
     global_rotation_matrix = new Matrix4();
     global_rotation_matrix.rotate(angle, 0, 1, 0);
@@ -101,6 +104,13 @@ function updateGlobalRotation(event) {
     renderScene();
 }
 
+function updateUpperLegJoint(event) {
+    let angle = event.target.value;
+
+    upperLegJointAngle = angle;
+
+    renderScene();
+}
 
 // *************************
 // WebGL Rendering
@@ -276,7 +286,8 @@ function renderScene() {
     // Back Right Leg
 
     // Upper Leg
-    M.setTranslate(-0.3, -0.2, -0.3);
+    M.setTranslate(-0.3, -0.2, -0.31);
+    rotateAround(M, upperLegJointAngle, 0, 0, 1, 0, 0.125, 0);
     M.scale(0.2, 0.25, 0.2);
     drawCube(M, BLUE);
 
