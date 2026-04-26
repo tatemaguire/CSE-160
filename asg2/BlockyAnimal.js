@@ -81,8 +81,8 @@ function main() {
 
     // Setup input
     let globalRotationInput = document.getElementById("globalRotationInput");
-    globalRotationInput.value = 180;
     globalRotationInput.addEventListener("input", updateGlobalRotation);
+    updateGlobalRotation({ target: globalRotationInput });
 
     renderScene();
 }
@@ -271,6 +271,9 @@ function renderScene() {
     M.translate(0, -0.15, 0);
     M.scale(0.8, 0.1, 0.6);
     drawCube(M, BLUE);
+
+
+    // Leg
 }
 
 // Draw backplate piece
