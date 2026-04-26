@@ -47,6 +47,11 @@ const cubeFaces = new Uint8Array([
     4, 7, 6
 ]);
 
+// Colors
+const BLUE = [0.0, 0.5, 0.7, 1.0];
+const PURPLE = [0.3, 0.1, 0.3, 1.0];
+const IVORY = [0.8, 0.8, 0.7, 1.0];
+
 // Canvas/Context References
 let canvas;
 let gl;
@@ -88,9 +93,10 @@ function updateGlobalRotation(event) {
     let angle = event.target.value;
     // set angle range from -180 to 180
     angle -= 180;
+    angle *= -1;
 
     global_rotation_matrix = new Matrix4();
-    global_rotation_matrix.rotate(angle, 0, 1, 0.2);
+    global_rotation_matrix.rotate(angle, 0, 1, 0);
 
     renderScene();
 }
@@ -231,17 +237,82 @@ function renderScene() {
     // ----------------------
 
     let M = new Matrix4();
-    M.setScale(0.5, 1, 1);
-    M.rotate(25, 1, 1, 0);
 
-    let blue = [0.0, 0.5, 0.8, 1.0];
+    // Center plate
+    drawBackplate(M);
 
-    drawCube(M, blue);
-
+    // Front Center Plate
     M.setIdentity();
-    M.translate(0.5, 0.5, 0.5);
-    M.scale(0.1, 0.5, 0.2);
-    M.rotate(18, 0.5, 0.2, 0.1);
+    M.translate(0.225, -0.03, 0);
+    M.scale(0.8, 0.8, 0.8);
+    drawBackplate(M);
 
-    drawCube(M, blue);
+    // Back Center Plate
+    M.setIdentity();
+    M.translate(-0.225, -0.03, 0);
+    M.scale(0.8, 0.8, 0.8);
+    drawBackplate(M);
+
+    // Front Plate
+    M.setIdentity();
+    M.translate(0.4, -0.06, 0);
+    M.scale(0.6, 0.6, 0.6);
+    drawBackplate(M);
+
+    // Back Plate
+    M.setIdentity();
+    M.translate(-0.4, -0.06, 0);
+    M.scale(0.6, 0.6, 0.6);
+    drawBackplate(M);
+}
+
+// Draw backplate piece
+function drawBackplate(matrix) {
+    // Base Plate
+    let M = new Matrix4(matrix);
+    M.translate(0, 0.05, 0);
+    M.scale(0.25, 0.4, 0.8);
+    drawCube(M, PURPLE);
+
+    // Center Horn
+    M.set(matrix);
+    M.translate(0, 0.26, 0);
+    M.scale(0.1, 0.1, 0.1);
+    drawCube(M, IVORY);
+
+    // Left Center Horn
+    M.set(matrix);
+    M.translate(0, 0.245, 0.2);
+    M.scale(0.1, 0.1, 0.1);
+    drawCube(M, IVORY);
+
+    // Right Center Horn
+    M.set(matrix);
+    M.translate(0, 0.245, -0.2);
+    M.scale(0.1, 0.1, 0.1);
+    drawCube(M, IVORY);
+
+    // Left Horn
+    M.set(matrix);
+    M.translate(0, 0.23, 0.39);
+    M.scale(0.08, 0.08, 0.08);
+    drawCube(M, IVORY);
+
+    // Right Horn
+    M.set(matrix);
+    M.translate(0, 0.23, -0.39);
+    M.scale(0.08, 0.08, 0.08);
+    drawCube(M, IVORY);
+
+    // Left Side Horn
+    M.set(matrix);
+    M.translate(0, 0.05, 0.39);
+    M.scale(0.08, 0.08, 0.08);
+    drawCube(M, IVORY);
+
+    // Right Side Horn
+    M.set(matrix);
+    M.translate(0, 0.05, -0.39);
+    M.scale(0.08, 0.08, 0.08);
+    drawCube(M, IVORY);
 }
