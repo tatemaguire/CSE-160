@@ -264,6 +264,13 @@ function renderScene() {
     M.translate(-0.4, -0.06, 0);
     M.scale(0.6, 0.6, 0.6);
     drawBackplate(M);
+
+
+    // Belly
+    M.setIdentity();
+    M.translate(0, -0.15, 0);
+    M.scale(0.8, 0.1, 0.6);
+    drawCube(M, BLUE);
 }
 
 // Draw backplate piece
