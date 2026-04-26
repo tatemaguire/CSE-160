@@ -273,7 +273,24 @@ function renderScene() {
     drawCube(M, BLUE);
 
 
-    // Leg
+    // Back Right Leg
+
+    // Upper Leg
+    M.setTranslate(-0.3, -0.2, -0.3);
+    M.scale(0.2, 0.25, 0.2);
+    drawCube(M, BLUE);
+
+    // Lower Leg
+    // rotateAround(M, 15, 0, 0, 1, -0.3, -0.3, -0.3);
+    M.setTranslate(-0.3, -0.4, -0.3);
+    M.scale(0.15, 0.2, 0.15);
+    drawCube(M, BLUE);
+
+    // Foot
+    M.setTranslate(-0.25, -0.5, -0.3);
+    M.scale(0.25, 0.1, 0.15);
+    drawCube(M, BLUE);
+
 }
 
 // Draw backplate piece
@@ -325,4 +342,15 @@ function drawBackplate(matrix) {
     M.translate(0, 0.05, -0.39);
     M.scale(0.08, 0.08, 0.08);
     drawCube(M, IVORY);
+}
+
+// *******************
+// Helper Functions
+// *******************
+
+// rotate about a specific point
+function rotateAround(M, angle, x, y, z, px, py, pz) {
+    M.translate(px, py, pz);
+    M.rotate(angle, x, y, z);
+    M.translate(-px, -py, -pz);
 }
