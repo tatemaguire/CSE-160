@@ -301,17 +301,27 @@ function renderScene() {
 
 
     // Back Right Leg
+    M.setTranslate(-0.3, -0.2, -0.31);
+    drawLeg(M, thighJointAngle, calfJointAngle, footJointAngle);
+
+    // Back Left Leg
+    M.setTranslate(-0.3, -0.2, 0.31);
+    drawLeg(M, -thighJointAngle, -calfJointAngle, -footJointAngle);
+}
+
+function drawLeg(matrix, thighAngle, calfAngle, footAngle) {
+    let M = new Matrix4(matrix);
 
     // Thigh
-    M.setTranslate(-0.3, -0.2, -0.31);
-    rotateAround(M, thighJointAngle, 0, 0, 1, 0, 0.125, 0);
+    // M.setTranslate(-0.3, -0.2, -0.31);
+    rotateAround(M, thighAngle, 0, 0, 1, 0, 0.125, 0);
     let unscaled_M = new Matrix4(M);
     M.scale(0.2, 0.25, 0.2);
     drawCube(M, BLUE);
 
     // Calf
     M = unscaled_M;
-    rotateAround(M, calfJointAngle, 0, 0, 1, 0, -0.1, 0);
+    rotateAround(M, calfAngle, 0, 0, 1, 0, -0.1, 0);
     M.translate(0, -0.2, 0);
     unscaled_M = new Matrix4(M);
     M.scale(0.15, 0.2, 0.15);
@@ -319,11 +329,10 @@ function renderScene() {
 
     // Foot
     M = unscaled_M;
-    rotateAround(M, footJointAngle, 0,0,1, 0,-0.1,0);
+    rotateAround(M, footAngle, 0,0,1, 0,-0.1,0);
     M.translate(0.05, -0.1, 0);
     M.scale(0.25, 0.1, 0.15);
     drawCube(M, BLUE);
-
 }
 
 // Draw backplate piece
