@@ -78,6 +78,7 @@ let headJointAngle = 0;
 
 // Animation State
 let lastTime = 0;
+let timeElapsed = 0;
 let isAnimating = false;
 
 
@@ -95,6 +96,7 @@ function main() {
     animationCheckbox.addEventListener("click", (ev) => {
         isAnimating = ev.target.checked;
     });
+    isAnimating = animationCheckbox.checked;
 
     getJointInput();
 
@@ -107,6 +109,8 @@ function tick() {
     let now = Date.now();
     let deltaTime = now - lastTime;
     lastTime = now;
+
+    getGlobalRotationInput();
 
     if (isAnimating) {
         animateJoints(deltaTime);
@@ -121,7 +125,20 @@ function tick() {
 
 
 function animateJoints(dt) {
+    timeElapsed += dt / 1000;
 
+    let speed = 5;
+
+    // t, s, and slowT are measures of the frame of the animation cycle
+    let t = Math.sin(timeElapsed * speed);
+    let s = Math.cos(timeElapsed * speed);
+    let doubleT = Math.sin(timeElapsed * speed / 2);
+
+    thighJointAngle = t * 30;
+    calfJointAngle = s * 20;
+    footJointAngle = t * (-10);
+    tailJointAngle = doubleT * 20;
+    headJointAngle = Math.abs(t * 20) - 20;
 }
 
 
@@ -139,12 +156,15 @@ let headJointInput = document.getElementById("headJointInput");
 
 // Get data from all input
 function getJointInput() {
-    globalRotationAngle = -globalRotationInput.value;
     thighJointAngle = thighJointInput.value;
     calfJointAngle = calfJointInput.value;
     footJointAngle = footJointInput.value;
     tailJointAngle = tailJointInput.value;
     headJointAngle = headJointInput.value;
+}
+
+function getGlobalRotationInput() {
+    globalRotationAngle = -globalRotationInput.value;
 }
 
 // *************************
@@ -357,13 +377,13 @@ function renderScene() {
 
     // Neck
     M.setTranslate(0.53, -0.07, 0);
-    M.rotate(headJointAngle/2, 0, 1, 0);
+    M.rotate(headJointAngle/2, 0, 0, 1);
     M.scale(0.45, 0.45, 0.45);
     drawBackplate(M);
 
     // Head
     M.translate(0.25, 0, 0);
-    M.rotate(headJointAngle/2, 0, 1, 0);
+    M.rotate(headJointAngle/2, 0, 0, 1);
     M.scale(0.5, 0.4, 0.5);
     drawCube(M, BLUE);
 
