@@ -307,6 +307,16 @@ function renderScene() {
     // Back Left Leg
     M.setTranslate(-0.3, -0.2, 0.31);
     drawLeg(M, -thighJointAngle, -calfJointAngle, -footJointAngle);
+
+    // Front Right Leg
+    M.setTranslate(0.3, -0.25, -0.31);
+    M.scale(0.8, 0.8, 0.8);
+    drawLeg(M, -thighJointAngle, -calfJointAngle, -footJointAngle);
+
+    // Front Left Leg
+    M.setTranslate(0.3, -0.25, 0.31);
+    M.scale(0.8, 0.8, 0.8);
+    drawLeg(M, thighJointAngle, calfJointAngle, footJointAngle);
 }
 
 function drawLeg(matrix, thighAngle, calfAngle, footAngle) {
