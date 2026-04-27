@@ -68,9 +68,12 @@ let cube_element_buffer;
 
 // Global Values
 let global_rotation_matrix = new Matrix4();
+
 let thighJointAngle = 0;
 let calfJointAngle = 0;
 let footJointAngle = 0;
+let tailJointAngle = 0;
+let headJointAngle = 0;
 
 
 // *************************
@@ -99,6 +102,14 @@ function main() {
     footJointInput.addEventListener("input", updateFootJoint);
     updateFootJoint({ target: footJointInput });
 
+    let tailJointInput = document.getElementById("tailJointInput");
+    tailJointInput.addEventListener("input", updateTailJoint);
+    updateTailJoint({ target: tailJointInput });
+
+    let headJointInput = document.getElementById("headJointInput");
+    headJointInput.addEventListener("input", updateHeadJoint);
+    updateHeadJoint({ target: headJointInput });
+
     renderScene();
 }
 
@@ -126,6 +137,16 @@ function updateCalfJoint(event) {
 
 function updateFootJoint(event) {
     footJointAngle = event.target.value;
+    renderScene();
+}
+
+function updateTailJoint(event) {
+    tailJointAngle = event.target.value;
+    renderScene();
+}
+
+function updateHeadJoint(event) {
+    headJointAngle = event.target.value;
     renderScene();
 }
 
@@ -322,6 +343,7 @@ function renderScene() {
     // Tail
 
     M.setTranslate(-0.53, -0.07, 0);
+    M.rotate(tailJointAngle, 0, 1, 0);
     M.scale(0.45, 0.45, 0.45);
     drawBackplate(M);
 
@@ -330,6 +352,37 @@ function renderScene() {
         M.scale(0.85, 0.85, 0.85);
         drawBackplate(M);
     }
+
+
+    // Neck
+    M.setTranslate(0.53, -0.07, 0);
+    M.rotate(headJointAngle/2, 0, 1, 0);
+    M.scale(0.45, 0.45, 0.45);
+    drawBackplate(M);
+
+    // Head
+    M.translate(0.25, 0, 0);
+    M.rotate(headJointAngle/2, 0, 1, 0);
+    M.scale(0.5, 0.4, 0.5);
+    drawCube(M, BLUE);
+
+    // Hat
+    M.translate(0, 0.5, 0);
+    M.scale(1.1, 0.5, 1.1);
+    drawCube(M, PURPLE);
+    let hat_M = new Matrix4(M);
+
+    // Right Head Horn
+    M.translate(0.2, 0.4, -0.5);
+    M.scale(0.25, 0.5, 0.25);
+    drawCube(M, IVORY);
+
+    // Left Head Horn
+    M = hat_M;
+    M.translate(0.2, 0.4, 0.5);
+    M.scale(0.25, 0.5, 0.25);
+    drawCube(M, IVORY);
+
 }
 
 function drawLeg(matrix, thighAngle, calfAngle, footAngle) {
