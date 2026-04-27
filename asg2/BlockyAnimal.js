@@ -66,7 +66,7 @@ let u_GlobalRotation;
 let cube_array_buffer;
 let cube_element_buffer;
 
-// Global Values
+// Animation Angles
 let globalRotationAngle = 0;
 let global_rotation_matrix = null;
 
@@ -76,7 +76,9 @@ let footJointAngle = 0;
 let tailJointAngle = 0;
 let headJointAngle = 0;
 
+// Animation State
 let lastTime = 0;
+let isAnimating = false;
 
 
 // *************************
@@ -88,14 +90,38 @@ function main() {
     initProgram();
     initBuffers();
 
+    // Set Up Animation Checkbox
+    let animationCheckbox = document.getElementById("animationInput");
+    animationCheckbox.addEventListener("click", (ev) => {
+        isAnimating = ev.target.checked;
+    });
+
+    getJointInput();
+
+    lastTime = Date.now();
     tick();
 }
 
 function tick() {
-    getInput();
+    // Calculate deltaTime
+    let now = Date.now();
+    let deltaTime = now - lastTime;
+    lastTime = now;
+
+    if (isAnimating) {
+        animateJoints(deltaTime);
+    } else {
+        getJointInput();
+    }
+
     renderScene();
 
     requestAnimationFrame(tick);
+}
+
+
+function animateJoints(dt) {
+
 }
 
 
@@ -112,7 +138,7 @@ let tailJointInput = document.getElementById("tailJointInput");
 let headJointInput = document.getElementById("headJointInput");
 
 // Get data from all input
-function getInput() {
+function getJointInput() {
     globalRotationAngle = -globalRotationInput.value;
     thighJointAngle = thighJointInput.value;
     calfJointAngle = calfJointInput.value;
