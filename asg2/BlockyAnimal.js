@@ -67,13 +67,16 @@ let cube_array_buffer;
 let cube_element_buffer;
 
 // Global Values
-let global_rotation_matrix = new Matrix4();
+let globalRotationAngle = 0;
+let global_rotation_matrix = null;
 
 let thighJointAngle = 0;
 let calfJointAngle = 0;
 let footJointAngle = 0;
 let tailJointAngle = 0;
 let headJointAngle = 0;
+
+let lastTime = 0;
 
 
 // *************************
@@ -85,69 +88,37 @@ function main() {
     initProgram();
     initBuffers();
 
-    // Setup input
-    let globalRotationInput = document.getElementById("globalRotationInput");
-    globalRotationInput.addEventListener("input", updateGlobalRotation);
-    updateGlobalRotation({ target: globalRotationInput });
+    tick();
+}
 
-    let thighJointInput = document.getElementById("thighJointInput");
-    thighJointInput.addEventListener("input", updateThighJoint);
-    updateThighJoint({ target: thighJointInput });
-
-    let calfJointInput = document.getElementById("calfJointInput");
-    calfJointInput.addEventListener("input", updateCalfJoint);
-    updateCalfJoint({ target: calfJointInput });
-
-    let footJointInput = document.getElementById("footJointInput");
-    footJointInput.addEventListener("input", updateFootJoint);
-    updateFootJoint({ target: footJointInput });
-
-    let tailJointInput = document.getElementById("tailJointInput");
-    tailJointInput.addEventListener("input", updateTailJoint);
-    updateTailJoint({ target: tailJointInput });
-
-    let headJointInput = document.getElementById("headJointInput");
-    headJointInput.addEventListener("input", updateHeadJoint);
-    updateHeadJoint({ target: headJointInput });
-
+function tick() {
+    getInput();
     renderScene();
+
+    requestAnimationFrame(tick);
 }
 
 
-// Get current input, set rotation matrix
-function updateGlobalRotation(event) {
-    let angle = event.target.value;
-    angle = -angle;
+// ****************
+// Input Handlers
+// ****************
 
-    global_rotation_matrix = new Matrix4();
-    global_rotation_matrix.rotate(angle, 0, 1, 0);
+// Setup input
+let globalRotationInput = document.getElementById("globalRotationInput");
+let thighJointInput = document.getElementById("thighJointInput");
+let calfJointInput = document.getElementById("calfJointInput");
+let footJointInput = document.getElementById("footJointInput");
+let tailJointInput = document.getElementById("tailJointInput");
+let headJointInput = document.getElementById("headJointInput");
 
-    renderScene();
-}
-
-function updateThighJoint(event) {
-    thighJointAngle = event.target.value;
-    renderScene();
-}
-
-function updateCalfJoint(event) {
-    calfJointAngle = event.target.value;
-    renderScene();
-}
-
-function updateFootJoint(event) {
-    footJointAngle = event.target.value;
-    renderScene();
-}
-
-function updateTailJoint(event) {
-    tailJointAngle = event.target.value;
-    renderScene();
-}
-
-function updateHeadJoint(event) {
-    headJointAngle = event.target.value;
-    renderScene();
+// Get data from all input
+function getInput() {
+    globalRotationAngle = -globalRotationInput.value;
+    thighJointAngle = thighJointInput.value;
+    calfJointAngle = calfJointInput.value;
+    footJointAngle = footJointInput.value;
+    tailJointAngle = tailJointInput.value;
+    headJointAngle = headJointInput.value;
 }
 
 // *************************
@@ -256,7 +227,6 @@ function drawCube(matrix, color) {
     // Set uniform variables
     gl.uniform4f(u_FragColor, color[0], color[1], color[2], color[3]);
     gl.uniformMatrix4fv(u_ModelMatrix, false, matrix.elements);
-    gl.uniformMatrix4fv(u_GlobalRotation, false, global_rotation_matrix.elements);
 
     // Draw cube according to position indices in cube_element_buffer
     gl.drawElements(gl.TRIANGLES, cubeFaces.length, gl.UNSIGNED_BYTE, 0);
@@ -279,6 +249,11 @@ function renderScene() {
     // Connect attributes to buffer
     gl.enableVertexAttribArray(a_Position);
     gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
+
+    // Global Rotation
+    let global_rotation_M = new Matrix4();
+    global_rotation_M.rotate(globalRotationAngle, 0, 1, 0);
+    gl.uniformMatrix4fv(u_GlobalRotation, false, global_rotation_M.elements);
 
     // ----------------------
     // Draw Ankylosaurus
