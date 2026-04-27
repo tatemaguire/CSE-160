@@ -48,9 +48,9 @@ const cubeFaces = new Uint8Array([
 ]);
 
 // Colors
-const BLUE = [0.0, 0.5, 0.7, 1.0];
-const PURPLE = [0.3, 0.1, 0.3, 1.0];
-const IVORY = [0.8, 0.8, 0.7, 1.0];
+const BLUE = [0.2, 0.4, 0.6, 1.0];
+const PURPLE = [0.3, 0.15, 0.3, 1.0];
+const IVORY = [0.6, 0.6, 0.5, 1.0];
 
 // Canvas/Context References
 let canvas;
@@ -317,6 +317,19 @@ function renderScene() {
     M.setTranslate(0.3, -0.25, 0.31);
     M.scale(0.8, 0.8, 0.8);
     drawLeg(M, thighJointAngle, calfJointAngle, footJointAngle);
+
+
+    // Tail
+
+    M.setTranslate(-0.53, -0.07, 0);
+    M.scale(0.45, 0.45, 0.45);
+    drawBackplate(M);
+
+    for (let i = 0; i < 6; i++) {
+        M.translate(-0.22, 0, 0);
+        M.scale(0.85, 0.85, 0.85);
+        drawBackplate(M);
+    }
 }
 
 function drawLeg(matrix, thighAngle, calfAngle, footAngle) {
