@@ -67,7 +67,8 @@ let cube_array_buffer;
 let cube_element_buffer;
 
 // Animation Angles
-let globalRotationAngle = 0;
+let globalRotationAngleY = 0;
+let globalRotationAngleX = 0;
 let global_rotation_matrix = null;
 
 let thighJointAngle = 0;
@@ -98,8 +99,10 @@ function main() {
     });
     isAnimating = animationCheckbox.checked;
 
-    getJointInput();
+    // Set up Mouse movement
+    canvas.addEventListener("mousemove", updateGlobalRotation);
 
+    getJointInput();
     lastTime = Date.now();
     tick();
 }
@@ -109,8 +112,6 @@ function tick() {
     let now = Date.now();
     let deltaTime = now - lastTime;
     lastTime = now;
-
-    getGlobalRotationInput();
 
     if (isAnimating) {
         animateJoints(deltaTime);
@@ -146,8 +147,8 @@ function animateJoints(dt) {
 // Input Handlers
 // ****************
 
+
 // Setup input
-let globalRotationInput = document.getElementById("globalRotationInput");
 let thighJointInput = document.getElementById("thighJointInput");
 let calfJointInput = document.getElementById("calfJointInput");
 let footJointInput = document.getElementById("footJointInput");
@@ -163,8 +164,11 @@ function getJointInput() {
     headJointAngle = headJointInput.value;
 }
 
-function getGlobalRotationInput() {
-    globalRotationAngle = -globalRotationInput.value;
+function updateGlobalRotation(event) {
+    if (event.buttons & 1) {
+        globalRotationAngleY -= event.movementX;
+        globalRotationAngleX -= event.movementY;
+    }
 }
 
 // *************************
@@ -298,7 +302,8 @@ function renderScene() {
 
     // Global Rotation
     let global_rotation_M = new Matrix4();
-    global_rotation_M.rotate(globalRotationAngle, 0, 1, 0);
+    global_rotation_M.rotate(globalRotationAngleX, 1, 0, 0);
+    global_rotation_M.rotate(globalRotationAngleY, 0, 1, 0);
     gl.uniformMatrix4fv(u_GlobalRotation, false, global_rotation_M.elements);
 
     // ----------------------
