@@ -82,6 +82,8 @@ let lastTime = 0;
 let timeElapsed = 0;
 let isAnimating = false;
 
+// Stats debug
+let stats = new Stats();
 
 // *************************
 // Page Setup
@@ -91,6 +93,12 @@ let isAnimating = false;
 function main() {
     initProgram();
     initBuffers();
+
+    // Set up stats object
+    stats.dom.style.left = "auto";
+    stats.dom.style.right = "0";
+    stats.showPanel(0);
+    document.body.appendChild(stats.dom);
 
     // Set Up Animation Checkbox
     let animationCheckbox = document.getElementById("animationInput");
@@ -113,6 +121,8 @@ function tick() {
     let deltaTime = now - lastTime;
     lastTime = now;
 
+    stats.begin();
+
     if (isAnimating) {
         animateJoints(deltaTime);
     } else {
@@ -120,6 +130,8 @@ function tick() {
     }
 
     renderScene();
+
+    stats.end();
 
     requestAnimationFrame(tick);
 }
