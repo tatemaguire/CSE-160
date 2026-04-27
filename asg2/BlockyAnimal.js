@@ -20,7 +20,7 @@ void main()
 `;
 
 // Cube Vertices
-const cubeVertices = new Float32Array([
+const vertices = new Float32Array([
     -0.5, -0.5, -0.5,
     0.5, -0.5, -0.5,
     0.5, -0.5, 0.5,
@@ -29,6 +29,7 @@ const cubeVertices = new Float32Array([
     0.5, 0.5, -0.5,
     0.5, 0.5, 0.5,
     -0.5, 0.5, 0.5,
+    0, 0.5, 0,
 ]);
 
 // Cube Face Indices
@@ -47,6 +48,16 @@ const cubeFaces = new Uint8Array([
     4, 7, 6
 ]);
 
+// Pyramid Face Indices
+const pyramidFaces = new Uint8Array([
+    0, 1, 2,
+    0, 2, 3,
+    0, 8, 1,
+    1, 8, 2,
+    2, 8, 3,
+    3, 8, 0,
+]);
+
 // Colors
 const BLUE = [0.2, 0.4, 0.6, 1.0];
 const PURPLE = [0.3, 0.15, 0.3, 1.0];
@@ -63,8 +74,9 @@ let u_ModelMatrix;
 let u_GlobalRotation;
 
 // Buffer Locations
-let cube_array_buffer;
+let vertex_array_buffer;
 let cube_element_buffer;
+let pyramid_element_buffer;
 
 // Animation Angles
 let globalRotationAngleY = 0;
@@ -260,17 +272,17 @@ function initBuffers() {
     // Init Array Buffer
     // -------------------------
 
-    cube_array_buffer = gl.createBuffer();
-    if (!cube_array_buffer) {
+    vertex_array_buffer = gl.createBuffer();
+    if (!vertex_array_buffer) {
         console.error('Cube Vertex Buffer could not be created');
         return;
     }
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, cube_array_buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, cubeVertices, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_array_buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
     // -------------------------
-    // Init Element Buffer
+    // Init Cube Element Buffer
     // -------------------------
 
     cube_element_buffer = gl.createBuffer();
@@ -281,17 +293,48 @@ function initBuffers() {
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube_element_buffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, cubeFaces, gl.STATIC_DRAW);
+
+    // -------------------------
+    // Init Pyramid Element Buffer
+    // -------------------------
+
+    pyramid_element_buffer = gl.createBuffer();
+    if (!pyramid_element_buffer) {
+        console.error('Pyramid Element Buffer could not be created');
+        return;
+    }
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, pyramid_element_buffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, pyramidFaces, gl.STATIC_DRAW);
+
 }
 
 
 // Draw a Cube
 function drawCube(matrix, color) {
+    // Switch to cube element buffer
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube_element_buffer);
+
     // Set uniform variables
     gl.uniform4f(u_FragColor, color[0], color[1], color[2], color[3]);
     gl.uniformMatrix4fv(u_ModelMatrix, false, matrix.elements);
 
     // Draw cube according to position indices in cube_element_buffer
     gl.drawElements(gl.TRIANGLES, cubeFaces.length, gl.UNSIGNED_BYTE, 0);
+}
+
+
+// Draw a Pyramid
+function drawPyramid(matrix, color) {
+    // Switch to pyramid element buffer
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, pyramid_element_buffer);
+
+    // Set uniform variables
+    gl.uniform4f(u_FragColor, color[0], color[1], color[2], color[3]);
+    gl.uniformMatrix4fv(u_ModelMatrix, false, matrix.elements);
+
+    // Draw cube according to position indices in cube_element_buffer
+    gl.drawElements(gl.TRIANGLES, pyramidFaces.length, gl.UNSIGNED_BYTE, 0);
 }
 
 
@@ -304,9 +347,8 @@ function renderScene() {
     // Clear screen
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Bind buffers to cube data
-    gl.bindBuffer(gl.ARRAY_BUFFER, cube_array_buffer);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube_element_buffer);
+    // Bind buffers to vertex data
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertex_array_buffer);
 
     // Connect attributes to buffer
     gl.enableVertexAttribArray(a_Position);
@@ -461,19 +503,19 @@ function drawBackplate(matrix) {
     M.set(matrix);
     M.translate(0, 0.26, 0);
     M.scale(0.1, 0.1, 0.1);
-    drawCube(M, IVORY);
+    drawPyramid(M, IVORY);
 
     // Left Center Horn
     M.set(matrix);
     M.translate(0, 0.245, 0.2);
     M.scale(0.1, 0.1, 0.1);
-    drawCube(M, IVORY);
+    drawPyramid(M, IVORY);
 
     // Right Center Horn
     M.set(matrix);
     M.translate(0, 0.245, -0.2);
     M.scale(0.1, 0.1, 0.1);
-    drawCube(M, IVORY);
+    drawPyramid(M, IVORY);
 
     // Left Horn
     M.set(matrix);
