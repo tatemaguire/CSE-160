@@ -322,11 +322,11 @@ function renderScene() {
 
 
     // Back Right Leg
-    M.setTranslate(-0.3, -0.2, -0.31);
+    M.setTranslate(-0.3, -0.2, -0.24);
     drawLeg(M, thighJointAngle, calfJointAngle, footJointAngle);
 
     // Back Left Leg
-    M.setTranslate(-0.3, -0.2, 0.31);
+    M.setTranslate(-0.3, -0.2, 0.24);
     drawLeg(M, -thighJointAngle, -calfJointAngle, -footJointAngle);
 
     // Front Right Leg
