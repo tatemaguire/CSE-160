@@ -36,6 +36,7 @@ function main()
     initProgram();
     getShaderVariableLocations();
     let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_FACES);
+    let pyramid_mesh_data = new MeshData(gl, CUBE_VERTS, PYRAMID_FACES);
 
     // Connect attributes to buffer
     gl.enableVertexAttribArray(shader_var.a_Position);
@@ -44,13 +45,18 @@ function main()
     let M = new Matrix4();
     let GREEN = [0, 1, 0, 1];
 
-    let my_obj = new Mesh(cube_mesh_data, M, GREEN);
+    let pyramid = new Mesh(pyramid_mesh_data, M, GREEN);
+    
+    M.translate(0.5, 0.5, 0);
+    M.scale(0.5, 0.5, 0.5);
+    let cube = new Mesh(cube_mesh_data, M, [1, 0, 1, 1]);
 
     let camera = new Matrix4();
 
     gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, camera.elements);
 
-    my_obj.render(gl, shader_var);
+    pyramid.render(gl, shader_var);
+    cube.render(gl, shader_var);
 
 }
 

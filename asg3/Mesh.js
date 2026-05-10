@@ -6,8 +6,8 @@ class Mesh {
 
     constructor(mesh_data, model_matrix, base_color) {
         this.mesh_data = mesh_data
-        this.model_matrix = model_matrix;
-        this.base_color = base_color;
+        this.model_matrix = new Matrix4(model_matrix);
+        this.base_color = new Float32Array(base_color);
 
         if (!mesh_data.vert_buffer || !mesh_data.face_buffer || !mesh_data.num_verts) {
             console.error("Mesh data is invalid");
@@ -22,7 +22,7 @@ class Mesh {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mesh_data.face_buffer);
 
         // Set uniform variables
-        gl.uniform4f(shader_var.u_FragColor, this.base_color[0], this.base_color[1], this.base_color[2], this.base_color[3]);
+        gl.uniform4fv(shader_var.u_FragColor, this.base_color);
         gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.model_matrix.elements);
 
         // Draw cube according to position indices in cube_element_buffer
