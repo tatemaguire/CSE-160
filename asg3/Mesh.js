@@ -1,6 +1,5 @@
 class Mesh {
 
-    // Fields
     mesh_data;
     model_matrix;
     base_color;
@@ -11,12 +10,12 @@ class Mesh {
         this.base_color = base_color;
 
         if (!mesh_data.vert_buffer || !mesh_data.face_buffer || !mesh_data.num_verts) {
-            console.error("Can't construct object without initializing buffers");
+            console.error("Mesh data is invalid");
             return;
         }
     }
 
-    // Draw using current buffers, model matrix, and base color
+    // Draw using mesh data, model matrix, and base color
     render(gl, shader_var) {
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.vert_buffer);
