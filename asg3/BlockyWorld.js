@@ -34,6 +34,7 @@ let shader_var = {
 // Globals
 let view_matrix = new Matrix4();
 let scene = []; // array of meshes
+let rotation_input;
 
 function main()
 {
@@ -61,7 +62,13 @@ function main()
     scene.push(cube);
 
 
+    // Get Input objects
+    rotation_input = document.getElementById("rotation");
+
+
     renderScene();
+
+    requestAnimationFrame(tick);
 
 }
 
@@ -125,8 +132,21 @@ function getShaderVariableLocations()
 }
 
 
+// Called once per frame
+function tick() {
+    view_matrix.setRotate(-rotation_input.value, 0, 1, 0);
+
+    renderScene();
+
+    requestAnimationFrame(tick);
+}
+
+
 // Render all meshes
 function renderScene() {
+
+    // Clear previous frame
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Store view matrix
     gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, view_matrix.elements);
