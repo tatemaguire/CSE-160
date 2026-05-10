@@ -31,32 +31,37 @@ let shader_var = {
     u_FragColor: -1
 };
 
+// Globals
+let view_matrix = new Matrix4();
+let scene = []; // array of meshes
+
 function main()
 {
     initProgram();
     getShaderVariableLocations();
+
     let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_FACES);
     let pyramid_mesh_data = new MeshData(gl, CUBE_VERTS, PYRAMID_FACES);
 
     // Connect attributes to buffer
     gl.enableVertexAttribArray(shader_var.a_Position);
     gl.vertexAttribPointer(shader_var.a_Position, 3, gl.FLOAT, false, 0, 0);
+
+    // Create objects
     
     let M = new Matrix4();
     let GREEN = [0, 1, 0, 1];
 
     let pyramid = new Mesh(pyramid_mesh_data, M, GREEN);
-    
+    scene.push(pyramid);
+
     M.translate(0.5, 0.5, 0);
     M.scale(0.5, 0.5, 0.5);
     let cube = new Mesh(cube_mesh_data, M, [1, 0, 1, 1]);
+    scene.push(cube);
 
-    let camera = new Matrix4();
 
-    gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, camera.elements);
-
-    pyramid.render(gl, shader_var);
-    cube.render(gl, shader_var);
+    renderScene();
 
 }
 
@@ -116,5 +121,18 @@ function getShaderVariableLocations()
     if (shader_var.u_FragColor < 0) {
         console.error('Failed to get the storage location of u_FragColor');
         return;
+    }
+}
+
+
+// Render all meshes
+function renderScene() {
+
+    // Store view matrix
+    gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, view_matrix.elements);
+
+    // Render meshes
+    for (let mesh of scene) {
+        mesh.render(gl, shader_var);
     }
 }
