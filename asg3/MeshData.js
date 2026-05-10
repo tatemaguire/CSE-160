@@ -59,3 +59,14 @@ const CUBE_FACES = new Uint8Array([
     4, 6, 5,
     4, 7, 6
 ]);
+
+// Pyramid
+// These indices refer to CUBE_VERTS
+const PYRAMID_FACES = new Uint8Array([
+    0, 1, 2,
+    0, 2, 3,
+    0, 8, 1,
+    1, 8, 2,
+    2, 8, 3,
+    3, 8, 0,
+]);
