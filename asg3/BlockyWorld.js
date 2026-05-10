@@ -19,35 +19,6 @@ void main()
 }
 `;
 
-// Cube Vertices
-const vertices = new Float32Array([
-    -0.5, -0.5, -0.5,
-    0.5, -0.5, -0.5,
-    0.5, -0.5, 0.5,
-    -0.5, -0.5, 0.5,
-    -0.5, 0.5, -0.5,
-    0.5, 0.5, -0.5,
-    0.5, 0.5, 0.5,
-    -0.5, 0.5, 0.5,
-    0, 0.5, 0,
-]);
-
-// Cube Face Indices
-const cubeFaces = new Uint8Array([
-    0, 1, 2,
-    0, 2, 3,
-    0, 5, 1,
-    0, 4, 5,
-    0, 3, 7,
-    0, 7, 4,
-    1, 6, 2,
-    1, 5, 6,
-    2, 7, 3,
-    2, 6, 7,
-    4, 6, 5,
-    4, 7, 6
-]);
-
 // Canvas/Context References
 let canvas;
 let gl;
@@ -64,20 +35,18 @@ function main()
 {
     initProgram();
     getShaderVariableLocations();
-
-    let cube_mesh_data = new MeshData(gl, vertices, cubeFaces);
+    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_FACES);
 
     // Connect attributes to buffer
     gl.enableVertexAttribArray(shader_var.a_Position);
     gl.vertexAttribPointer(shader_var.a_Position, 3, gl.FLOAT, false, 0, 0);
-
+    
     let M = new Matrix4();
-
     let GREEN = [0, 1, 0, 1];
+
     let my_obj = new Mesh(cube_mesh_data, M, GREEN);
 
     let camera = new Matrix4();
-    // camera.setTranslate(0, 0, 2);
 
     gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, camera.elements);
 
