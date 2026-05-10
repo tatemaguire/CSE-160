@@ -65,7 +65,7 @@ function main()
     initProgram();
     getShaderVariableLocations();
 
-    GameObject.initializeBuffers(gl, vertices, cubeFaces);
+    Mesh.initializeBuffers(gl, vertices, cubeFaces);
 
     // Connect attributes to buffer
     gl.enableVertexAttribArray(shader_var.a_Position);
@@ -74,7 +74,7 @@ function main()
     let M = new Matrix4();
 
     let GREEN = [0, 1, 0, 1];
-    let my_obj = new GameObject(M, GREEN);
+    let my_obj = new Mesh(M, GREEN);
 
     let camera = new Matrix4();
     // camera.setTranslate(0, 0, 2);
