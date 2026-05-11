@@ -40,6 +40,7 @@ class TextureLoader {
         if (time_passed > 5000) {
             console.error("TextureLoader: timeout - textures haven't loaded after 5s");
 
+            // Give up on loading, return true anyway
             TextureLoader.textures_currently_loading = 0;
             return true;
         }

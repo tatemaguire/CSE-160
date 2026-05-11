@@ -172,45 +172,22 @@ function initProgram()
 // Gets variable locations from webgl, stores in shader_var object
 function getShaderVariableLocations()
 {
-    shader_var.u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
-    if (shader_var.u_ViewMatrix < 0) {
-        console.error('Failed to get the storage location of u_ViewMatrix');
-        return;
-    }
+    for (let var_name in shader_var) {
+        // Get the variable location (depends on u/a prefix)
+        if (var_name[0] === 'u') {
+            shader_var[var_name] = gl.getUniformLocation(gl.program, var_name);
+        }
+        else if (var_name[0] === 'a') {
+            shader_var[var_name] = gl.getAttribLocation(gl.program, var_name);
+        }
+        else {
+            console.error("Variable name " + var_name + " not recognized");
+        }
 
-    shader_var.u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
-    if (shader_var.u_ModelMatrix < 0) {
-        console.error('Failed to get the storage location of u_ModelMatrix');
-        return;
-    }
-
-    shader_var.a_Position = gl.getAttribLocation(gl.program, 'a_Position');
-    if (shader_var.a_Position < 0) {
-        console.error('Failed to get the storage location of a_Position');
-        return;
-    }
-
-    shader_var.a_TexCoord = gl.getAttribLocation(gl.program, 'a_TexCoord');
-    if (shader_var.a_TexCoord < 0) {
-        console.error('Failed to get the storage location of a_TexCoord');
-        return;
-    }
-
-    shader_var.u_BaseColor = gl.getUniformLocation(gl.program, 'u_BaseColor');
-    if (shader_var.u_BaseColor < 0) {
-        console.error('Failed to get the storage location of u_BaseColor');
-        return;
-    }
-
-    shader_var.u_Sampler = gl.getUniformLocation(gl.program, 'u_Sampler');
-    if (shader_var.u_Sampler < 0) {
-        console.error('Failed to get the storage location of u_Sampler');
-        return;
-    }
-
-    shader_var.u_TexColorWeight = gl.getUniformLocation(gl.program, 'u_TexColorWeight');
-    if (shader_var.u_TexColorWeight < 0) {
-        console.error('Failed to get the storage location of u_TexColorWeight');
-        return;
+        // Throw error if not found
+        if (shader_var[var_name] < 0) {
+            console.error('Failed to get the storage location of' + var_name);
+            return;
+        }
     }
 }
