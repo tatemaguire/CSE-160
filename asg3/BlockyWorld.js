@@ -1,7 +1,6 @@
 // Vertex Shader Source GLSL ES
 let VSHADER_SOURCE = `
-uniform mat4 u_ViewMatrix;
-uniform mat4 u_ModelMatrix;
+uniform mat4 u_MVPMatrix;
 uniform vec3 u_GlobalLight;
 
 attribute vec4 a_Position;
@@ -13,10 +12,10 @@ varying float v_LightValue;
 
 void main()
 {
-    gl_Position = u_ViewMatrix * u_ModelMatrix * a_Position;
+    gl_Position = u_MVPMatrix * a_Position;
     v_TexCoord = a_TexCoord;
-    
-    vec3 worldNormal = (u_ViewMatrix * u_ModelMatrix * vec4(a_Normal, 1)).xyz;
+
+    vec3 worldNormal = (u_MVPMatrix * vec4(a_Normal, 1)).xyz;
     v_LightValue = dot(u_GlobalLight, worldNormal);
 }
 `;
@@ -50,8 +49,7 @@ let gl;
 
 // Variable Locations
 let shader_var = {
-    u_ViewMatrix: -1,
-    u_ModelMatrix: -1,
+    u_MVPMatrix: -1,
     u_GlobalLight: -1,
     a_Position: -1,
     a_Normal: -1,
@@ -66,7 +64,7 @@ let rotation_input;
 let texture_modifier_input;
 
 // Globals
-let view_matrix = new Matrix4();
+let VP_matrix = new Matrix4();
 let scene = []; // array of meshes
 
 
@@ -78,6 +76,9 @@ function main()
     let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_NORMS, CUBE_TEXCOORD, CUBE_FACES);
     let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png');
     let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png');
+
+    // Store global light direction
+    gl.uniform3f(shader_var.u_GlobalLight, 0.8, 0.3, -1);
 
     // Create objects
     
@@ -102,6 +103,7 @@ function main()
     // Initial poll
     pollInputs();
 
+    // renderScene();
     requestAnimationFrame(tick);
 }
 
@@ -131,15 +133,9 @@ function renderScene() {
     // Clear previous frame
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Store view matrix
-    gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, view_matrix.elements);
-
-    // Store global light direction
-    gl.uniform3f(shader_var.u_GlobalLight, 0.8, 0.3, -1);
-
     // Render meshes
     for (let mesh of scene) {
-        mesh.render(gl, shader_var);
+        mesh.render(gl, shader_var, VP_matrix);
     }
 }
 
@@ -147,7 +143,7 @@ function renderScene() {
 // Get data from all input elements
 function pollInputs() {
     // Global Rotation
-    view_matrix.setRotate(-rotation_input.value, 1, 1, 0);
+    VP_matrix.setRotate(-rotation_input.value, 1, 1, 0);
 
     // Texture modifier
     for (let mesh of scene) {
