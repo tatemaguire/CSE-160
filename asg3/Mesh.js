@@ -21,6 +21,10 @@ class Mesh {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.vert_buffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mesh_data.face_buffer);
 
+        // Connect attributes to buffer
+        gl.enableVertexAttribArray(shader_var.a_Position);
+        gl.vertexAttribPointer(shader_var.a_Position, 3, gl.FLOAT, false, 0, 0);
+
         // Set uniform variables
         gl.uniform4fv(shader_var.u_FragColor, this.base_color);
         gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.model_matrix.elements);

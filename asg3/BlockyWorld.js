@@ -43,9 +43,7 @@ function main()
 
     let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_FACES);
 
-    // Connect attributes to buffer
-    gl.enableVertexAttribArray(shader_var.a_Position);
-    gl.vertexAttribPointer(shader_var.a_Position, 3, gl.FLOAT, false, 0, 0);
+    
 
     // Create objects
     
