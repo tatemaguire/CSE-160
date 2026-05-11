@@ -3,19 +3,24 @@ let VSHADER_SOURCE = `
 uniform mat4 u_ViewMatrix;
 uniform mat4 u_ModelMatrix;
 attribute vec4 a_Position;
+attribute vec2 a_TexCoord;
+varying vec2 v_TexCoord;
 void main()
 {
     gl_Position = u_ViewMatrix * u_ModelMatrix * a_Position;
+    v_TexCoord = a_TexCoord;
 }
 `;
 
 // Fragment Shader Source GLSL ES
 let FSHADER_SOURCE = `
 precision mediump float;
-uniform vec4 u_FragColor;
+uniform vec4 u_BaseColor;
+uniform sampler2D u_Sampler;
+varying vec2 v_TexCoord;
 void main()
 {
-    gl_FragColor = u_FragColor;
+    gl_FragColor = vec4(v_TexCoord, 0, 1) * 0.5 + u_BaseColor * 0.5;
 }
 `;
 
@@ -28,7 +33,9 @@ let shader_var = {
     u_ViewMatrix: -1,
     u_ModelMatrix: -1,
     a_Position: -1,
-    u_FragColor: -1
+    a_TexCoord: -1,
+    u_BaseColor: -1,
+    u_Sampler: -1,
 };
 
 // Globals
@@ -41,9 +48,7 @@ function main()
     initProgram();
     getShaderVariableLocations();
 
-    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_FACES);
-
-    
+    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_TEXCOORD, CUBE_FACES);
 
     // Create objects
     
@@ -121,9 +126,21 @@ function getShaderVariableLocations()
         return;
     }
 
-    shader_var.u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
-    if (shader_var.u_FragColor < 0) {
+    shader_var.a_TexCoord = gl.getAttribLocation(gl.program, 'a_TexCoord');
+    if (shader_var.a_TexCoord < 0) {
+        console.error('Failed to get the storage location of a_TexCoord');
+        return;
+    }
+
+    shader_var.u_BaseColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+    if (shader_var.u_BaseColor < 0) {
         console.error('Failed to get the storage location of u_FragColor');
+        return;
+    }
+
+    shader_var.u_Sampler = gl.getUniformLocation(gl.program, 'u_Sampler');
+    if (shader_var.u_Sampler < 0) {
+        console.error('Failed to get the storage location of u_Sampler');
         return;
     }
 }

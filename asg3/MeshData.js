@@ -1,10 +1,11 @@
 class MeshData {
 
     vert_buffer;
+    texcoord_buffer;
     face_buffer;
     num_verts;
 
-    constructor(gl, verts, faces) {
+    constructor(gl, verts, texcoords, faces) {
 
         // Create Vertex Position Buffer
         this.vert_buffer = gl.createBuffer();
@@ -15,6 +16,16 @@ class MeshData {
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vert_buffer);
         gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+
+        // Create Texel Position Buffer
+        this.texcoord_buffer = gl.createBuffer();
+        if (!this.texcoord_buffer) {
+            console.error("Couldn't create texcoord_buffer");
+            return;
+        }
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.texcoord_buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, texcoords, gl.STATIC_DRAW);
 
         // Create Faces Buffer (of vertex indices)
         this.face_buffer = gl.createBuffer();
@@ -43,6 +54,16 @@ const CUBE_VERTS = new Float32Array([
      0.5,  0.5, -0.5,
      0.5,  0.5,  0.5,
     -0.5,  0.5,  0.5,
+]);
+const CUBE_TEXCOORD = new Float32Array([
+    0, 0,
+    1, 0,
+    1, 1,
+    0, 1,
+    0, 1,
+    1, 1,
+    1, 0,
+    0, 0,
 ]);
 const CUBE_FACES = new Uint8Array([
     0, 1, 2,
