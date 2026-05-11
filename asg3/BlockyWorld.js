@@ -43,7 +43,10 @@ let shader_var = {
 // Globals
 let view_matrix = new Matrix4();
 let scene = []; // array of meshes
+
+// DOM Elements
 let rotation_input;
+let texture_modifier_input;
 
 function main()
 {
@@ -51,7 +54,6 @@ function main()
     getShaderVariableLocations();
 
     let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_TEXCOORD, CUBE_FACES);
-
     let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png');
 
     // Create objects
@@ -67,15 +69,17 @@ function main()
     cube = new Mesh(cube_mesh_data, M, [1, 0, 1, 1], redrock_texture, 0.5);
     scene.push(cube);
 
-
     // Get Input objects
     rotation_input = document.getElementById("rotation");
+    rotation_input.addEventListener("input", pollInputs);
 
+    texture_modifier_input = document.getElementById("texture_modifier");
+    texture_modifier_input.addEventListener("input", pollInputs);
 
-    renderScene();
+    // Initial poll
+    pollInputs();
 
     requestAnimationFrame(tick);
-
 }
 
 // Sets up canvas, gl, and gets shader variable locations
@@ -158,9 +162,9 @@ function getShaderVariableLocations()
 
 // Called once per frame
 function tick() {
-    view_matrix.setRotate(-rotation_input.value, 0, 1, 0);
+    // pollInputs();
 
-    if (TextureLoader.textures_currently_loading === 0) {
+    if (TextureLoader.isDoneLoading()) {
         renderScene();
     }
     else {
@@ -183,5 +187,17 @@ function renderScene() {
     // Render meshes
     for (let mesh of scene) {
         mesh.render(gl, shader_var);
+    }
+}
+
+
+// Get data from all input elements
+function pollInputs() {
+    // Global Rotation
+    view_matrix.setRotate(-rotation_input.value, 0, 1, 0);
+
+    // Texture modifier
+    for (let mesh of scene) {
+        mesh.tex_color_weight = texture_modifier_input.value;
     }
 }

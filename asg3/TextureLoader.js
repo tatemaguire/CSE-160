@@ -1,5 +1,6 @@
 class TextureLoader {
     static textures_currently_loading = 0;
+    static most_recent_request_time = 0;
 
     static requestTexture(gl, shader_var, filename) {
         let texture = gl.createTexture();
@@ -9,6 +10,7 @@ class TextureLoader {
 
         // Make the request
         TextureLoader.textures_currently_loading++;
+        TextureLoader.most_recent_request_time = Date.now();
         image.src = filename;
 
         return texture;
@@ -24,5 +26,24 @@ class TextureLoader {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 
         TextureLoader.textures_currently_loading--;
+    }
+
+    static isDoneLoading() {
+        let is_done = TextureLoader.textures_currently_loading === 0;
+        
+        if (is_done) {
+            return true;
+        }
+
+        // If not done, check for timeout
+        let time_passed = Date.now() - TextureLoader.most_recent_request_time;
+        if (time_passed > 5000) {
+            console.error("TextureLoader: timeout - textures haven't loaded after 5s");
+
+            TextureLoader.textures_currently_loading = 0;
+            return true;
+        }
+
+        return false;
     }
 }
