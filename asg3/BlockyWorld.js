@@ -37,6 +37,7 @@ void main()
     vec4 baseComponent = u_BaseColor * (1.0 - u_TexColorWeight);
 
     float lv = clamp(v_LightValue, 0.2, 1.0);
+    lv = 1.0;
     vec4 lightMultiplier = vec4(lv, lv, lv, 1.0);
 
     gl_FragColor = (texComponent + baseComponent) * lightMultiplier;
@@ -64,7 +65,7 @@ let rotation_input;
 let texture_modifier_input;
 
 // Globals
-let VP_matrix = new Matrix4();
+let camera = null;
 let scene = []; // array of meshes
 
 
@@ -80,9 +81,14 @@ function main()
     // Store global light direction
     gl.uniform3f(shader_var.u_GlobalLight, 0.8, 0.3, -1);
 
+    // Create Camera
+    camera = new Camera(canvas.width/canvas.height);
+    console.log(camera);
+
     // Create objects
     
     let M = new Matrix4();
+    M.translate(0, 0, -10);
     let GREEN = [0, 1, 0, 1];
 
     let cube = new Mesh(cube_mesh_data, M, GREEN, redrock_texture, 0.5);
@@ -103,8 +109,8 @@ function main()
     // Initial poll
     pollInputs();
 
-    // renderScene();
-    requestAnimationFrame(tick);
+    renderScene();
+    // requestAnimationFrame(tick);
 }
 
 
@@ -135,15 +141,13 @@ function renderScene() {
 
     // Render meshes
     for (let mesh of scene) {
-        mesh.render(gl, shader_var, VP_matrix);
+        mesh.render(gl, shader_var, camera);
     }
 }
 
 
 // Get data from all input elements
 function pollInputs() {
-    // Global Rotation
-    VP_matrix.setRotate(-rotation_input.value, 1, 1, 0);
 
     // Texture modifier
     for (let mesh of scene) {

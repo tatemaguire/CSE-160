@@ -20,7 +20,7 @@ class Mesh {
     }
 
     // Draw using mesh data, model matrix, and base color
-    render(gl, shader_var, projection_view_matrix) {
+    render(gl, shader_var, camera) {
         
         // Setup vertex buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.vert_buffer);
@@ -50,8 +50,9 @@ class Mesh {
         gl.uniform1f(shader_var.u_TexColorWeight, this.tex_color_weight);
 
         // Calculate MVP matrix and store it
-        let MVP_matrix = new Matrix4(projection_view_matrix);
+        let MVP_matrix = camera.getVPMatrix();
         MVP_matrix.multiply(this.model_matrix);
+        console.log(this.model_matrix);
         gl.uniformMatrix4fv(shader_var.u_MVPMatrix, false, MVP_matrix.elements);
 
         // Draw cube according to position indices in cube_element_buffer
