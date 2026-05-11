@@ -21,7 +21,9 @@ uniform float u_TexColorWeight;
 varying vec2 v_TexCoord;
 void main()
 {
-    gl_FragColor = texture2D(u_Sampler, v_TexCoord) * u_TexColorWeight + u_BaseColor * (1.0 - u_TexColorWeight);
+    vec4 texComponent = texture2D(u_Sampler, v_TexCoord) * u_TexColorWeight;
+    vec4 baseComponent = u_BaseColor * (1.0 - u_TexColorWeight);
+    gl_FragColor = texComponent + baseComponent;
 }
 `;
 
@@ -47,6 +49,7 @@ let scene = []; // array of meshes
 // DOM Elements
 let rotation_input;
 let texture_modifier_input;
+
 
 function main()
 {
@@ -81,6 +84,59 @@ function main()
 
     requestAnimationFrame(tick);
 }
+
+
+// ----------------------------------------------------------------------------
+// Main Program Operations
+// ----------------------------------------------------------------------------
+
+
+// Called once per frame
+function tick() {
+
+    if (TextureLoader.isDoneLoading()) {
+        renderScene();
+    }
+    else {
+        console.log("loading...");
+    }
+
+    requestAnimationFrame(tick);
+}
+
+
+// Render all meshes
+function renderScene() {
+
+    // Clear previous frame
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Store view matrix
+    gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, view_matrix.elements);
+
+    // Render meshes
+    for (let mesh of scene) {
+        mesh.render(gl, shader_var);
+    }
+}
+
+
+// Get data from all input elements
+function pollInputs() {
+    // Global Rotation
+    view_matrix.setRotate(-rotation_input.value, 0, 1, 0);
+
+    // Texture modifier
+    for (let mesh of scene) {
+        mesh.tex_color_weight = texture_modifier_input.value;
+    }
+}
+
+
+// ----------------------------------------------------------------------------
+// WebGL Initialization
+// ----------------------------------------------------------------------------
+
 
 // Sets up canvas, gl, and gets shader variable locations
 function initProgram()
@@ -156,48 +212,5 @@ function getShaderVariableLocations()
     if (shader_var.u_TexColorWeight < 0) {
         console.error('Failed to get the storage location of u_TexColorWeight');
         return;
-    }
-}
-
-
-// Called once per frame
-function tick() {
-    // pollInputs();
-
-    if (TextureLoader.isDoneLoading()) {
-        renderScene();
-    }
-    else {
-        console.log("loading...");
-    }
-
-    requestAnimationFrame(tick);
-}
-
-
-// Render all meshes
-function renderScene() {
-
-    // Clear previous frame
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    // Store view matrix
-    gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, view_matrix.elements);
-
-    // Render meshes
-    for (let mesh of scene) {
-        mesh.render(gl, shader_var);
-    }
-}
-
-
-// Get data from all input elements
-function pollInputs() {
-    // Global Rotation
-    view_matrix.setRotate(-rotation_input.value, 0, 1, 0);
-
-    // Texture modifier
-    for (let mesh of scene) {
-        mesh.tex_color_weight = texture_modifier_input.value;
     }
 }
