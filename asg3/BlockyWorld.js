@@ -124,7 +124,7 @@ function renderScene() {
 // Get data from all input elements
 function pollInputs() {
     // Global Rotation
-    view_matrix.setRotate(-rotation_input.value, 0, 1, 0);
+    view_matrix.setRotate(-rotation_input.value, 1, 1, 0);
 
     // Texture modifier
     for (let mesh of scene) {
