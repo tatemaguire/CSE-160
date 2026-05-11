@@ -1,13 +1,15 @@
 class MeshData {
 
     vert_buffer;
+    norm_buffer;
     texcoord_buffer;
     face_buffer;
     num_verts;
 
-    constructor(gl, verts, texcoords, faces) {
+    constructor(gl, verts, norms, texcoords, faces) {
 
         this.vert_buffer = initBuffer(gl, gl.ARRAY_BUFFER, verts);
+        this.norm_buffer = initBuffer(gl, gl.ARRAY_BUFFER, norms);
         this.texcoord_buffer = initBuffer(gl, gl.ARRAY_BUFFER, texcoords);
         this.face_buffer = initBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, faces);
 
@@ -76,6 +78,37 @@ const CUBE_VERTS = new Float32Array([
     -0.5,  0.5, -0.5,
     -0.5, -0.5, -0.5,
     -0.5, -0.5,  0.5,
+]);
+const CUBE_NORMS = new Float32Array([
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0,
+
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
 ]);
 const CUBE_TEXCOORD = new Float32Array([
     0, 0,

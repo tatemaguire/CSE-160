@@ -27,6 +27,11 @@ class Mesh {
         gl.enableVertexAttribArray(shader_var.a_Position);
         gl.vertexAttribPointer(shader_var.a_Position, 3, gl.FLOAT, false, 0, 0);
 
+        // Setup normal vectors buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.norm_buffer);
+        gl.enableVertexAttribArray(shader_var.a_Normal);
+        gl.vertexAttribPointer(shader_var.a_Normal, 3, gl.FLOAT, false, 0, 0);
+
         // Setup texcoord buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.texcoord_buffer);
         gl.enableVertexAttribArray(shader_var.a_TexCoord);

@@ -2,28 +2,45 @@
 let VSHADER_SOURCE = `
 uniform mat4 u_ViewMatrix;
 uniform mat4 u_ModelMatrix;
+uniform vec3 u_GlobalLight;
+
 attribute vec4 a_Position;
+attribute vec3 a_Normal;
 attribute vec2 a_TexCoord;
+
 varying vec2 v_TexCoord;
+varying float v_LightValue;
+
 void main()
 {
     gl_Position = u_ViewMatrix * u_ModelMatrix * a_Position;
     v_TexCoord = a_TexCoord;
+    
+    vec3 worldNormal = (u_ViewMatrix * u_ModelMatrix * vec4(a_Normal, 1)).xyz;
+    v_LightValue = dot(u_GlobalLight, worldNormal);
 }
 `;
 
 // Fragment Shader Source GLSL ES
 let FSHADER_SOURCE = `
 precision mediump float;
+
 uniform vec4 u_BaseColor;
 uniform sampler2D u_Sampler;
 uniform float u_TexColorWeight;
+
 varying vec2 v_TexCoord;
+varying float v_LightValue;
+
 void main()
 {
     vec4 texComponent = texture2D(u_Sampler, v_TexCoord) * u_TexColorWeight;
     vec4 baseComponent = u_BaseColor * (1.0 - u_TexColorWeight);
-    gl_FragColor = texComponent + baseComponent;
+
+    float lv = clamp(v_LightValue, 0.2, 1.0);
+    vec4 lightMultiplier = vec4(lv, lv, lv, 1.0);
+
+    gl_FragColor = (texComponent + baseComponent) * lightMultiplier;
 }
 `;
 
@@ -35,7 +52,9 @@ let gl;
 let shader_var = {
     u_ViewMatrix: -1,
     u_ModelMatrix: -1,
+    u_GlobalLight: -1,
     a_Position: -1,
+    a_Normal: -1,
     a_TexCoord: -1,
     u_BaseColor: -1,
     u_Sampler: -1,
@@ -56,7 +75,7 @@ function main()
     initProgram();
     getShaderVariableLocations();
 
-    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_TEXCOORD, CUBE_FACES);
+    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_NORMS, CUBE_TEXCOORD, CUBE_FACES);
     let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png');
     let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png');
 
@@ -114,6 +133,9 @@ function renderScene() {
 
     // Store view matrix
     gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, view_matrix.elements);
+
+    // Store global light direction
+    gl.uniform3f(shader_var.u_GlobalLight, 0.8, 0.3, -1);
 
     // Render meshes
     for (let mesh of scene) {
