@@ -42,13 +42,13 @@ let shader_var = {
     u_TexColorWeight: -1,
 };
 
-// Globals
-let view_matrix = new Matrix4();
-let scene = []; // array of meshes
-
 // DOM Elements
 let rotation_input;
 let texture_modifier_input;
+
+// Globals
+let view_matrix = new Matrix4();
+let scene = []; // array of meshes
 
 
 function main()
@@ -58,6 +58,7 @@ function main()
 
     let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_TEXCOORD, CUBE_FACES);
     let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png');
+    let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png');
 
     // Create objects
     
@@ -69,7 +70,7 @@ function main()
 
     M.translate(0.5, 0.5, 0);
     M.scale(0.5, 0.5, 0.5);
-    cube = new Mesh(cube_mesh_data, M, [1, 0, 1, 1], redrock_texture, 0.5);
+    cube = new Mesh(cube_mesh_data, M, [1, 0, 1, 1], bluerock_texture, 0.5);
     scene.push(cube);
 
     // Get Input objects
