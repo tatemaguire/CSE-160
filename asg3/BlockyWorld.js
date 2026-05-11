@@ -17,10 +17,11 @@ let FSHADER_SOURCE = `
 precision mediump float;
 uniform vec4 u_BaseColor;
 uniform sampler2D u_Sampler;
+uniform float u_TexColorWeight;
 varying vec2 v_TexCoord;
 void main()
 {
-    gl_FragColor = texture2D(u_Sampler, v_TexCoord);
+    gl_FragColor = texture2D(u_Sampler, v_TexCoord) * u_TexColorWeight + u_BaseColor * (1.0 - u_TexColorWeight);
 }
 `;
 
@@ -36,6 +37,7 @@ let shader_var = {
     a_TexCoord: -1,
     u_BaseColor: -1,
     u_Sampler: -1,
+    u_TexColorWeight: -1,
 };
 
 // Globals
@@ -57,12 +59,12 @@ function main()
     let M = new Matrix4();
     let GREEN = [0, 1, 0, 1];
 
-    let cube = new Mesh(cube_mesh_data, M, GREEN);
+    let cube = new Mesh(cube_mesh_data, M, GREEN, redrock_texture, 0.5);
     scene.push(cube);
 
     M.translate(0.5, 0.5, 0);
     M.scale(0.5, 0.5, 0.5);
-    cube = new Mesh(cube_mesh_data, M, [1, 0, 1, 1]);
+    cube = new Mesh(cube_mesh_data, M, [1, 0, 1, 1], redrock_texture, 0.5);
     scene.push(cube);
 
 
@@ -134,15 +136,21 @@ function getShaderVariableLocations()
         return;
     }
 
-    shader_var.u_BaseColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+    shader_var.u_BaseColor = gl.getUniformLocation(gl.program, 'u_BaseColor');
     if (shader_var.u_BaseColor < 0) {
-        console.error('Failed to get the storage location of u_FragColor');
+        console.error('Failed to get the storage location of u_BaseColor');
         return;
     }
 
     shader_var.u_Sampler = gl.getUniformLocation(gl.program, 'u_Sampler');
     if (shader_var.u_Sampler < 0) {
         console.error('Failed to get the storage location of u_Sampler');
+        return;
+    }
+
+    shader_var.u_TexColorWeight = gl.getUniformLocation(gl.program, 'u_TexColorWeight');
+    if (shader_var.u_TexColorWeight < 0) {
+        console.error('Failed to get the storage location of u_TexColorWeight');
         return;
     }
 }

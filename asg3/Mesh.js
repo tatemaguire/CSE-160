@@ -3,11 +3,15 @@ class Mesh {
     mesh_data;
     model_matrix;
     base_color;
+    texture;
+    tex_color_weight;
 
-    constructor(mesh_data, model_matrix, base_color) {
+    constructor(mesh_data, model_matrix, base_color, texture, tex_color_weight) {
         this.mesh_data = mesh_data
         this.model_matrix = new Matrix4(model_matrix);
         this.base_color = new Float32Array(base_color);
+        this.texture = texture;
+        this.tex_color_weight = tex_color_weight;
 
         if (!mesh_data.vert_buffer || !mesh_data.texcoord_buffer || !mesh_data.face_buffer || !mesh_data.num_verts) {
             console.error("Mesh data is invalid");
@@ -17,7 +21,6 @@ class Mesh {
 
     // Draw using mesh data, model matrix, and base color
     render(gl, shader_var) {
-
         
         // Setup vertex buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.vert_buffer);
@@ -34,7 +37,13 @@ class Mesh {
 
         // Set uniform variables
         gl.uniform4fv(shader_var.u_BaseColor, this.base_color);
+        gl.uniform1f(shader_var.u_TexColorWeight, this.tex_color_weight);
         gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.model_matrix.elements);
+
+        // Setup texture uniform
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.uniform1i(shader_var.u_Sampler, 0);
 
         // Draw cube according to position indices in cube_element_buffer
         gl.drawElements(gl.TRIANGLES, this.mesh_data.num_verts, gl.UNSIGNED_BYTE, 0);

@@ -23,8 +23,6 @@ class TextureLoader {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 
-        gl.uniform1i(shader_var.u_Sampler, 0);
-
         TextureLoader.textures_currently_loading--;
     }
 }
