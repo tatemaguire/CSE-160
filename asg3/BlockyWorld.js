@@ -20,7 +20,7 @@ uniform sampler2D u_Sampler;
 varying vec2 v_TexCoord;
 void main()
 {
-    gl_FragColor = vec4(v_TexCoord, 0, 1) * 0.5 + u_BaseColor * 0.5;
+    gl_FragColor = texture2D(u_Sampler, v_TexCoord);
 }
 `;
 
@@ -49,6 +49,8 @@ function main()
     getShaderVariableLocations();
 
     let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_TEXCOORD, CUBE_FACES);
+
+    let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png');
 
     // Create objects
     
@@ -150,7 +152,12 @@ function getShaderVariableLocations()
 function tick() {
     view_matrix.setRotate(-rotation_input.value, 0, 1, 0);
 
-    renderScene();
+    if (TextureLoader.textures_currently_loading === 0) {
+        renderScene();
+    }
+    else {
+        console.log("loading...");
+    }
 
     requestAnimationFrame(tick);
 }
