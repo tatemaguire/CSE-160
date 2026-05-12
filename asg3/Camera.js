@@ -5,8 +5,11 @@ class Camera {
     eye;
     at;
     up;
+
     view_matrix;
     projection_matrix;
+
+    speed;
 
     constructor(aspect) {
 
@@ -22,6 +25,8 @@ class Camera {
 
         this.projection_matrix = new Matrix4();
         this.updateProjectionMatrix();
+
+        this.speed = 5;
     }
 
     // Set view matrix after updating eye/at/up
@@ -38,9 +43,11 @@ class Camera {
 
     // Move 'eye' forward
     moveForward() {
-        console.log(this.at);
-        console.log(this.eye);
-        let forward = this.at.sub(this.eye);
+        let forward = new Vector3();
+        forward.set(this.at);
+        forward.sub(this.eye);
+        
+        forward.mul(this.speed);
         console.log(forward);
     }
 
