@@ -1,6 +1,8 @@
 // Vertex Shader Source GLSL ES
 let VSHADER_SOURCE = `
-uniform mat4 u_MVPMatrix;
+uniform mat4 u_ProjectionMatrix;
+uniform mat4 u_ViewMatrix;
+uniform mat4 u_ModelMatrix;
 uniform vec3 u_GlobalLight;
 
 attribute vec4 a_Position;
@@ -12,10 +14,10 @@ varying float v_LightValue;
 
 void main()
 {
-    gl_Position = u_MVPMatrix * a_Position;
+    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;
     v_TexCoord = a_TexCoord;
 
-    vec3 worldNormal = (u_MVPMatrix * vec4(a_Normal, 1)).xyz;
+    vec3 worldNormal = (u_ModelMatrix * vec4(a_Normal, 1)).xyz;
     v_LightValue = dot(u_GlobalLight, worldNormal);
 }
 `;
@@ -50,7 +52,9 @@ let gl;
 
 // Variable Locations
 let shader_var = {
-    u_MVPMatrix: -1,
+    u_ProjectionMatrix: -1,
+    u_ViewMatrix: -1,
+    u_ModelMatrix: -1,
     u_GlobalLight: -1,
     a_Position: -1,
     a_Normal: -1,
