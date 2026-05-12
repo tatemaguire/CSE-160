@@ -26,7 +26,7 @@ class Camera {
         this.projection_matrix = new Matrix4();
         this.updateProjectionMatrix();
 
-        this.speed = 5;
+        this.speed = 0.5;
     }
 
     // Set view matrix after updating eye/at/up
@@ -46,13 +46,28 @@ class Camera {
         let forward = new Vector3();
         forward.set(this.at);
         forward.sub(this.eye);
-        
+
         forward.mul(this.speed);
-        console.log(forward);
+
+        // Move in the forward direction
+        this.at.add(forward);
+        this.eye.add(forward);
+
+        this.updateViewMatrix();
     }
 
     moveBackward() {
+        let forward = new Vector3();
+        forward.set(this.at);
+        forward.sub(this.eye);
 
+        forward.mul(-this.speed);
+
+        // Move in the forward direction
+        this.at.add(forward);
+        this.eye.add(forward);
+
+        this.updateViewMatrix();
     }
 
     moveLeft() {
