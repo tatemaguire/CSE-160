@@ -175,6 +175,12 @@ function keydown(ev) {
     if (ev.key == 'd') {
         camera.moveRight();
     }
+    if (ev.key == 'q') {
+        camera.panLeft();
+    }
+    if (ev.key == 'e') {
+        camera.panRight();
+    }
 }
 
 

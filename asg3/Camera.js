@@ -10,9 +10,9 @@ class Camera {
     projection_matrix;
 
     speed;
+    angular_speed;
 
     constructor(aspect) {
-
         this.fov = 60;
         this.aspect = aspect;
 
@@ -27,6 +27,7 @@ class Camera {
         this.updateProjectionMatrix();
 
         this.speed = 0.5;
+        this.angular_speed = 5;
     }
 
     // Set view matrix after updating eye/at/up
@@ -96,6 +97,38 @@ class Camera {
         
         this.at.add(right);
         this.eye.add(right);
+
+        this.updateViewMatrix();
+    }
+
+    panLeft() {
+        let forward = new Vector3();
+        forward.set(this.at);
+        forward.sub(this.eye);
+
+        let rotate_M = new Matrix4();
+        rotate_M.setRotate(this.angular_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
+
+        let new_forward = rotate_M.multiplyVector3(forward);
+
+        this.at.set(this.eye);
+        this.at.add(new_forward);
+
+        this.updateViewMatrix();
+    }
+
+    panRight() {
+        let forward = new Vector3();
+        forward.set(this.at);
+        forward.sub(this.eye);
+
+        let rotate_M = new Matrix4();
+        rotate_M.setRotate(-this.angular_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
+
+        let new_forward = rotate_M.multiplyVector3(forward);
+
+        this.at.set(this.eye);
+        this.at.add(new_forward);
 
         this.updateViewMatrix();
     }
