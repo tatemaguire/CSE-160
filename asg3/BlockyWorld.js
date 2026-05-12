@@ -87,7 +87,6 @@ function main()
 
     // Create Camera
     camera = new Camera(canvas.width/canvas.height);
-    console.log(camera);
 
     // Create objects
     
@@ -110,11 +109,13 @@ function main()
     texture_modifier_input = document.getElementById("texture_modifier");
     texture_modifier_input.addEventListener("input", pollInputs);
 
+    // Set up keyboard input
+    document.onkeydown = keydown;
+
     // Initial poll
     pollInputs();
 
-    renderScene();
-    // requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
 }
 
 
@@ -156,6 +157,23 @@ function pollInputs() {
     // Texture modifier
     for (let mesh of scene) {
         mesh.tex_color_weight = texture_modifier_input.value;
+    }
+}
+
+
+// Get keyboard input
+function keydown(ev) {
+    if (ev.key == 'w') {
+        camera.moveForward();
+    }
+    if (ev.key == 's') {
+        camera.moveBackward();
+    }
+    if (ev.key == 'a') {
+        camera.moveLeft();
+    }
+    if (ev.key == 'd') {
+        camera.moveRight();
     }
 }
 
