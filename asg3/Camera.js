@@ -71,10 +71,32 @@ class Camera {
     }
 
     moveLeft() {
+        let forward = new Vector3();
+        forward.set(this.at);
+        forward.sub(this.eye);
 
+        let right = forward.cross(this.up);
+        right.normalize();
+        right.mul(-this.speed);
+        
+        this.at.add(right);
+        this.eye.add(right);
+
+        this.updateViewMatrix();
     }
 
     moveRight() {
+        let forward = new Vector3();
+        forward.set(this.at);
+        forward.sub(this.eye);
 
+        let right = forward.cross(this.up);
+        right.normalize();
+        right.mul(this.speed);
+        
+        this.at.add(right);
+        this.eye.add(right);
+
+        this.updateViewMatrix();
     }
 }
