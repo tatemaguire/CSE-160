@@ -24,15 +24,19 @@ class World {
         this.meshes = [];
         for (let row in this.world_data) {
             for (let col in this.world_data) {
-                if (this.world_data[row][col] > 0) {
-                    // Create cube
-                    let M = new Matrix4(this.model_matrix);
-                    M.translate(row, 0, col);
-                    let cube = new Mesh(this.mesh_data, M, [1,1,1,1], this.texture, 1);
-                    this.meshes.push(cube);
+                let height = this.world_data[row][col];
+                for (let y = 0; y < height; y++) {
+                    this.createCube(row, y, col);
                 }
             }
         }
+    }
+
+    createCube(x, y, z) {
+        let M = new Matrix4(this.model_matrix);
+        M.translate(x, y, z);
+        let cube = new Mesh(this.mesh_data, M, [1,1,1,1], this.texture, 1);
+        this.meshes.push(cube);
     }
 
     render(gl, shader_var, camera) {
@@ -44,8 +48,8 @@ class World {
 }
 
 const WORLD_DATA = [
-    [1, 0, 0, 1],
+    [2, 0, 0, 1],
     [1, 1, 0, 1],
-    [1, 0, 0, 1],
+    [1, 0, 0, 2],
     [1, 1, 1, 1],
 ]
