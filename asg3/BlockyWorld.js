@@ -3,14 +3,13 @@ let VSHADER_SOURCE = `
 uniform mat4 u_ProjectionMatrix;
 uniform mat4 u_ViewMatrix;
 uniform mat4 u_ModelMatrix;
-uniform vec3 u_GlobalLight;
 
 attribute vec4 a_Position;
 attribute vec3 a_Normal;
 attribute vec2 a_TexCoord;
 
 varying vec2 v_TexCoord;
-varying float v_LightValue;
+varying vec3 v_Normal;
 
 void main()
 {
@@ -18,7 +17,7 @@ void main()
     v_TexCoord = a_TexCoord;
 
     vec3 worldNormal = (u_ModelMatrix * vec4(a_Normal, 1)).xyz;
-    v_LightValue = dot(u_GlobalLight, worldNormal);
+    v_Normal = worldNormal;
 }
 `;
 
@@ -29,20 +28,21 @@ precision mediump float;
 uniform vec4 u_BaseColor;
 uniform sampler2D u_Sampler;
 uniform float u_TexColorWeight;
+uniform vec3 u_GlobalLight;
 
 varying vec2 v_TexCoord;
-varying float v_LightValue;
+varying vec3 v_Normal;
 
 void main()
 {
     vec4 texComponent = texture2D(u_Sampler, v_TexCoord) * u_TexColorWeight;
     vec4 baseComponent = u_BaseColor * (1.0 - u_TexColorWeight);
 
-    float lv = clamp(v_LightValue, 0.2, 1.0);
+    float lv = dot(normalize(v_Normal), u_GlobalLight);
     lv = 1.0;
     vec4 lightMultiplier = vec4(lv, lv, lv, 1.0);
 
-    gl_FragColor = (texComponent + baseComponent);
+    gl_FragColor = (texComponent + baseComponent) * lightMultiplier;
 }
 `;
 
@@ -94,7 +94,6 @@ function main()
     M.translate(2, -0.025, 2);
     M.scale(6, 0.05, 6);
     let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], bluerock_texture, 0);
-    console.log(floor);
     scene.push(floor);
 
     // create world
