@@ -64,9 +64,15 @@ let shader_var = {
     u_TexColorWeight: -1,
 };
 
-// DOM Elements
-let rotation_input;
-let texture_modifier_input;
+// Input Status
+let input = {
+    left: false,
+    right: false,
+    up: false,
+    down: false,
+    turn_left: false,
+    turn_right: false,
+};
 
 // Globals
 let camera = null;
@@ -109,6 +115,7 @@ function main()
 
     // Set up keyboard input
     document.onkeydown = keydown;
+    document.onkeyup = keyup;
 
     requestAnimationFrame(tick);
     // renderScene();
@@ -140,7 +147,8 @@ function renderScene() {
     // Clear previous frame
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // console.log(scene[0]);
+
+    camera.update(input);
 
     // Render meshes
     for (let mesh of scene) {
@@ -152,22 +160,43 @@ function renderScene() {
 // Get keyboard input
 function keydown(ev) {
     if (ev.key == 'w') {
-        camera.moveForward();
+        input.up = true;
     }
     if (ev.key == 's') {
-        camera.moveBackward();
+        input.down = true;
     }
     if (ev.key == 'a') {
-        camera.moveLeft();
+        input.left = true;
     }
     if (ev.key == 'd') {
-        camera.moveRight();
+        input.right = true;
     }
     if (ev.key == 'q') {
-        camera.panLeft();
+        input.turn_left = true;
     }
     if (ev.key == 'e') {
-        camera.panRight();
+        input.turn_right = true;
+    }
+}
+
+function keyup(ev) {
+    if (ev.key == 'w') {
+        input.up = false;
+    }
+    if (ev.key == 's') {
+        input.down = false;
+    }
+    if (ev.key == 'a') {
+        input.left = false;
+    }
+    if (ev.key == 'd') {
+        input.right = false;
+    }
+    if (ev.key == 'q') {
+        input.turn_left = false;
+    }
+    if (ev.key == 'e') {
+        input.turn_right = false;
     }
 }
 

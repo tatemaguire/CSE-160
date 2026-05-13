@@ -26,8 +26,43 @@ class Camera {
         this.projection_matrix = new Matrix4();
         this.updateProjectionMatrix();
 
-        this.speed = 0.1;
-        this.angular_speed = 5;
+        this.speed = 0.05;
+        this.angular_speed = 1;
+    }
+
+    update(input) {
+        let move = [0, 0]; // control vector
+        if (input.left) move[0]--;
+        if (input.right) move[0]++;
+        if (input.up) move[1]++;
+        if (input.down) move[1]--;
+
+        let turn = 0;
+        if (input.turn_left) turn++;
+        if (input.turn_right) turn--;
+
+
+        if (move[0] == 1) {
+            this.moveRight();
+        }
+        if (move[0] == -1) {
+            this.moveLeft();
+        }
+
+        if (move[1] == 1) {
+            this.moveForward();
+        }
+        if (move[1] == -1) {
+            this.moveBackward();
+        }
+
+        if (turn == 1) {
+            this.panLeft();
+        }
+        if (turn == -1) {
+            this.panRight();
+        }
+
     }
 
     // Set view matrix after updating eye/at/up
