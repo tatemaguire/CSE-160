@@ -10,7 +10,8 @@ class Camera {
     projection_matrix;
 
     speed;
-    angular_speed;
+    look_speed;
+    pan_speed;
 
     constructor(aspect) {
         this.fov = 60;
@@ -27,7 +28,8 @@ class Camera {
         this.updateProjectionMatrix();
 
         this.speed = 0.05;
-        this.angular_speed = 1;
+        this.look_speed = 0.3;
+        this.pan_speed = 1;
     }
 
     update(input) {
@@ -62,7 +64,25 @@ class Camera {
         if (turn == -1) {
             this.panRight();
         }
+    }
 
+    rotateLook(x, y) {
+        let forward = new Vector3();
+        forward.set(this.at);
+        forward.sub(this.eye);
+
+        let right = forward.cross(this.up);
+
+        let rotate_M = new Matrix4();
+        rotate_M.setRotate(-x * this.look_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
+        rotate_M.rotate(-y * this.look_speed, right.elements[0], right.elements[1], right.elements[2]);
+
+        let new_forward = rotate_M.multiplyVector3(forward);
+
+        this.at.set(this.eye);
+        this.at.add(new_forward);
+
+        this.updateViewMatrix();
     }
 
     // Set view matrix after updating eye/at/up
@@ -142,7 +162,7 @@ class Camera {
         forward.sub(this.eye);
 
         let rotate_M = new Matrix4();
-        rotate_M.setRotate(this.angular_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
+        rotate_M.setRotate(this.pan_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
 
         let new_forward = rotate_M.multiplyVector3(forward);
 
@@ -158,7 +178,7 @@ class Camera {
         forward.sub(this.eye);
 
         let rotate_M = new Matrix4();
-        rotate_M.setRotate(-this.angular_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
+        rotate_M.setRotate(-this.pan_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
 
         let new_forward = rotate_M.multiplyVector3(forward);
 

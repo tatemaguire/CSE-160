@@ -116,6 +116,7 @@ function main()
     // Set up keyboard input
     document.onkeydown = keydown;
     document.onkeyup = keyup;
+    canvas.onmousemove = mousemove;
 
     requestAnimationFrame(tick);
     // renderScene();
@@ -197,6 +198,13 @@ function keyup(ev) {
     }
     if (ev.key == 'e') {
         input.turn_right = false;
+    }
+}
+
+function mousemove(ev) {
+    // console.log(ev.movementX, ev.movementY);
+    if (ev.buttons & 1) {
+        camera.rotateLook(ev.movementX, ev.movementY);
     }
 }
 
