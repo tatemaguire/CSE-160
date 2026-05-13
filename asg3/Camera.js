@@ -32,7 +32,7 @@ class Camera {
         this.pan_speed = 2;
     }
 
-    update(input) {
+    parseInput(input) {
         // get direction of movement from input
 
         let move_x = 0;

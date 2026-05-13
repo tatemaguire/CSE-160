@@ -79,9 +79,18 @@ let camera = null;
 let scene = []; // array of meshes
 let world = null;
 
+let stats = new Stats();
+
 
 function main()
 {
+    // Set up stats object
+    stats.dom.style.left = "auto";
+    stats.dom.style.right = "0";
+    stats.showPanel(0);
+    document.body.appendChild(stats.dom);
+
+    // Start WebGL
     initProgram();
     getShaderVariableLocations();
 
@@ -136,6 +145,9 @@ function buildScene() {
 
 // Called once per frame
 function tick() {
+    stats.begin();
+
+    camera.parseInput(input);
 
     if (TextureLoader.isDoneLoading()) {
         renderScene();
@@ -143,6 +155,8 @@ function tick() {
     else {
         console.log("loading...");
     }
+
+    stats.end();
 
     requestAnimationFrame(tick);
 }
@@ -153,9 +167,6 @@ function renderScene() {
 
     // Clear previous frame
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-
-    camera.update(input);
 
     // Render meshes
     for (let mesh of scene) {
