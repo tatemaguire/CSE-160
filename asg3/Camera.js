@@ -16,8 +16,8 @@ class Camera {
         this.fov = 60;
         this.aspect = aspect;
 
-        this.eye = new Vector3([0, 0, 0]);
-        this.at = new Vector3([0, 0, 1]);
+        this.eye = new Vector3([-3, 1.5, 2]);
+        this.at = new Vector3([-2, 1.5, 2]);
         this.up = new Vector3([0, 1, 0]);
 
         this.view_matrix = new Matrix4();

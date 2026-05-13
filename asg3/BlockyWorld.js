@@ -97,8 +97,8 @@ function main()
     scene.push(floor);
 
     // create world
-    M.setTranslate(0, -0.5, 0);
-    M.scale(0.5, 0.5, 0.5);
+    M.setTranslate(0.5, 0.5, 0.5);
+    // M.scale(0.5, 0.5, 0.5);
     let world = new World(WORLD_DATA, M, cube_mesh_data, redrock_texture);
     scene.push(world);
 
