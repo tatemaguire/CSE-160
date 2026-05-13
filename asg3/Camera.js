@@ -53,18 +53,16 @@ class Camera {
     }
 
     rotateLook(x, y) {
-        let forward = new Vector3();
-        forward.set(this.at);
-        forward.sub(this.eye);
+        let forward = this.getForwardDirection();
+        let right = this.getRightDirection();
 
-        let right = forward.cross(this.up);
-
+        // create rotation matrix used to modify camera angle
         let rotate_M = new Matrix4();
         rotate_M.setRotate(-x * this.look_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
         rotate_M.rotate(-y * this.look_speed, right.elements[0], right.elements[1], right.elements[2]);
 
+        // rotate view
         let new_forward = rotate_M.multiplyVector3(forward);
-
         this.at.set(this.eye);
         this.at.add(new_forward);
 
@@ -108,6 +106,7 @@ class Camera {
         this.projection_matrix.setPerspective(this.fov, this.aspect, 0.1, 1000);
     }
 
+    // get the vector direction that represents forward from the camera's perspective
     getForwardDirection() {
         let forward = new Vector3();
         forward.set(this.at);
@@ -117,6 +116,7 @@ class Camera {
         return forward;
     }
 
+    // get the vector direction that represents right from the camera's perspective
     getRightDirection() {
         let forward = this.getForwardDirection();
 
