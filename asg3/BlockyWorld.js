@@ -42,7 +42,7 @@ void main()
     lv = 1.0;
     vec4 lightMultiplier = vec4(lv, lv, lv, 1.0);
 
-    gl_FragColor = (texComponent + baseComponent) * lightMultiplier;
+    gl_FragColor = (texComponent + baseComponent);
 }
 `;
 
@@ -91,29 +91,19 @@ function main()
 
     // Create floor
     let M = new Matrix4();
-    M.translate(0, -1, 0);
-    M.scale(1, 0.05, 1);
-    let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0, 1], redrock_texture, 0);
+    M.translate(2, -0.025, 2);
+    M.scale(6, 0.05, 6);
+    let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], bluerock_texture, 0);
+    console.log(floor);
     scene.push(floor);
 
     // create world
     M.setTranslate(0.5, 0.5, 0.5);
-    // M.scale(0.5, 0.5, 0.5);
     let world = new World(WORLD_DATA, M, cube_mesh_data, redrock_texture);
     scene.push(world);
 
-    // Get Input objects
-    rotation_input = document.getElementById("rotation");
-    rotation_input.addEventListener("input", pollInputs);
-
-    texture_modifier_input = document.getElementById("texture_modifier");
-    texture_modifier_input.addEventListener("input", pollInputs);
-
     // Set up keyboard input
     document.onkeydown = keydown;
-
-    // Initial poll
-    pollInputs();
 
     requestAnimationFrame(tick);
     // renderScene();
@@ -145,19 +135,11 @@ function renderScene() {
     // Clear previous frame
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    // console.log(scene[0]);
+
     // Render meshes
     for (let mesh of scene) {
         mesh.render(gl, shader_var, camera);
-    }
-}
-
-
-// Get data from all input elements
-function pollInputs() {
-
-    // Texture modifier
-    for (let mesh of scene) {
-        mesh.tex_color_weight = texture_modifier_input.value;
     }
 }
 
