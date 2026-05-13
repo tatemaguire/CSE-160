@@ -33,37 +33,23 @@ class Camera {
     }
 
     update(input) {
-        let move = [0, 0]; // control vector
-        if (input.left) move[0]--;
-        if (input.right) move[0]++;
-        if (input.up) move[1]++;
-        if (input.down) move[1]--;
+        // get direction of movement from input
 
+        let move_x = 0;
+        if (input.left) move_x--;
+        if (input.right) move_x++;
+        
+        let move_y = 0
+        if (input.up) move_y++;
+        if (input.down) move_y--;
+        
         let turn = 0;
         if (input.turn_left) turn++;
         if (input.turn_right) turn--;
 
-
-        if (move[0] == 1) {
-            this.move(1, 0);
-        }
-        if (move[0] == -1) {
-            this.move(-1, 0);
-        }
-
-        if (move[1] == 1) {
-            this.move(0, 1);
-        }
-        if (move[1] == -1) {
-            this.move(0, -1);
-        }
-
-        if (turn == 1) {
-            this.rotateLook(-this.pan_speed, 0);
-        }
-        if (turn == -1) {
-            this.rotateLook(this.pan_speed, 0);
-        }
+        // move the camera
+        this.move(move_x, move_y);
+        this.rotateLook(-this.pan_speed * turn, 0);
     }
 
     rotateLook(x, y) {
@@ -120,66 +106,6 @@ class Camera {
     // Set projection matrix after updating fov/aspect
     updateProjectionMatrix() {
         this.projection_matrix.setPerspective(this.fov, this.aspect, 0.1, 1000);
-    }
-
-    // Move 'eye' forward
-    moveForward() {
-        let forward = new Vector3();
-        forward.set(this.at);
-        forward.sub(this.eye);
-
-        forward.mul(this.speed);
-
-        // Move in the forward direction
-        this.at.add(forward);
-        this.eye.add(forward);
-
-        this.updateViewMatrix();
-    }
-
-    moveBackward() {
-        let forward = new Vector3();
-        forward.set(this.at);
-        forward.sub(this.eye);
-
-        forward.mul(-this.speed);
-
-        // Move in the forward direction
-        this.at.add(forward);
-        this.eye.add(forward);
-
-        this.updateViewMatrix();
-    }
-
-    moveLeft() {
-        let forward = new Vector3();
-        forward.set(this.at);
-        forward.sub(this.eye);
-
-        let right = forward.cross(this.up);
-        right.normalize();
-        right.mul(-this.speed);
-        
-        this.at.add(right);
-        this.eye.add(right);
-
-        this.updateViewMatrix();
-    }
-
-    moveRight() {
-        let forward = new Vector3();
-        forward.set(this.at);
-        forward.sub(this.eye);
-        forward.normalize();
-
-        let right = forward.cross(this.up);
-        right.normalize();
-        right.mul(this.speed);
-        
-        this.at.add(right);
-        this.eye.add(right);
-
-        this.updateViewMatrix();
     }
 
     getForwardDirection() {
