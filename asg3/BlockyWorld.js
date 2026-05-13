@@ -97,8 +97,9 @@ function main()
 
     // Create floor
     let M = new Matrix4();
-    M.translate(2, -0.025, 2);
-    M.scale(6, 0.05, 6);
+    let world_size = 5;
+    M.translate(world_size / 2, -0.025, world_size / 2);
+    M.scale(world_size + 2, 0.05, world_size + 2);
     let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], bluerock_texture, 0);
     scene.push(floor);
 

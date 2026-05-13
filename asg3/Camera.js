@@ -28,8 +28,8 @@ class Camera {
         this.updateProjectionMatrix();
 
         this.speed = 0.05;
-        this.look_speed = 0.3;
-        this.pan_speed = 1;
+        this.look_speed = 0.7;
+        this.pan_speed = 2;
     }
 
     update(input) {
@@ -59,10 +59,10 @@ class Camera {
         }
 
         if (turn == 1) {
-            this.panLeft();
+            this.rotateLook(-this.pan_speed, 0);
         }
         if (turn == -1) {
-            this.panRight();
+            this.rotateLook(this.pan_speed, 0);
         }
     }
 
@@ -152,38 +152,6 @@ class Camera {
         
         this.at.add(right);
         this.eye.add(right);
-
-        this.updateViewMatrix();
-    }
-
-    panLeft() {
-        let forward = new Vector3();
-        forward.set(this.at);
-        forward.sub(this.eye);
-
-        let rotate_M = new Matrix4();
-        rotate_M.setRotate(this.pan_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
-
-        let new_forward = rotate_M.multiplyVector3(forward);
-
-        this.at.set(this.eye);
-        this.at.add(new_forward);
-
-        this.updateViewMatrix();
-    }
-
-    panRight() {
-        let forward = new Vector3();
-        forward.set(this.at);
-        forward.sub(this.eye);
-
-        let rotate_M = new Matrix4();
-        rotate_M.setRotate(-this.pan_speed, this.up.elements[0], this.up.elements[1], this.up.elements[2]);
-
-        let new_forward = rotate_M.multiplyVector3(forward);
-
-        this.at.set(this.eye);
-        this.at.add(new_forward);
 
         this.updateViewMatrix();
     }
