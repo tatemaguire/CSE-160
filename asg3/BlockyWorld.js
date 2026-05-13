@@ -96,6 +96,12 @@ function main()
     let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], bluerock_texture, 0);
     scene.push(floor);
 
+    // create skybox
+    M.setIdentity();
+    M.scale(100, 100, 100);
+    let skybox = new Mesh(cube_mesh_data, M, [0.2, 0.5, 0.8, 1], bluerock_texture, 0);
+    scene.push(skybox);
+
     // create world
     M.setTranslate(0.5, 0.5, 0.5);
     let world = new World(WORLD_DATA, M, cube_mesh_data, redrock_texture);
