@@ -85,34 +85,10 @@ function main()
     initProgram();
     getShaderVariableLocations();
 
-    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_NORMS, CUBE_TEXCOORD, CUBE_FACES);
-    let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png');
-    let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png');
-
     // Store global light direction
     gl.uniform3f(shader_var.u_GlobalLight, 0.8, 0.3, -1);
 
-    // Create Camera
-    camera = new Camera(canvas.width/canvas.height);
-
-    // Create floor
-    let M = new Matrix4();
-    let world_size = 5;
-    M.translate(world_size / 2, -0.025, world_size / 2);
-    M.scale(world_size + 2, 0.05, world_size + 2);
-    let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], bluerock_texture, 0);
-    scene.push(floor);
-
-    // create skybox
-    M.setIdentity();
-    M.scale(100, 100, 100);
-    let skybox = new Mesh(cube_mesh_data, M, [0.2, 0.5, 0.8, 1], bluerock_texture, 0);
-    scene.push(skybox);
-
-    // create world
-    M.setTranslate(0.5, 0.5, 0.5);
-    let world = new World(null, M, cube_mesh_data, redrock_texture);
-    scene.push(world);
+    buildScene();
 
     // Set up keyboard input
     document.onkeydown = keydown;
@@ -128,6 +104,35 @@ function main()
 // Main Program Operations
 // ----------------------------------------------------------------------------
 
+
+function buildScene() {
+    // Mesh and texture loading
+    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_NORMS, CUBE_TEXCOORD, CUBE_FACES);
+    let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png');
+    let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png');
+
+    // Create Camera
+    camera = new Camera(canvas.width/canvas.height);
+
+    let M = new Matrix4();
+
+    // create skybox
+    M.setIdentity();
+    M.scale(100, 100, 100);
+    let skybox = new Mesh(cube_mesh_data, M, [0.2, 0.5, 0.8, 1], bluerock_texture, 0);
+    scene.push(skybox);
+
+    // create world
+    M.setTranslate(0.5, 0.5, 0.5);
+    let world = new World(null, M, cube_mesh_data, redrock_texture);
+    scene.push(world);
+
+    // Create floor
+    M.setTranslate(world.world_size / 2, -0.025, world.world_size / 2);
+    M.scale(world.world_size + 2, 0.05, world.world_size + 2);
+    let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], bluerock_texture, 0);
+    scene.push(floor);
+}
 
 // Called once per frame
 function tick() {
@@ -157,6 +162,10 @@ function renderScene() {
         mesh.render(gl, shader_var, camera);
     }
 }
+
+// ----------------------------------------------------------------------------
+// Input
+// ----------------------------------------------------------------------------
 
 
 // Get keyboard input

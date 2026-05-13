@@ -12,6 +12,9 @@ class World {
     constructor(world_data, model_matrix, mesh_data, texture) {
         this.model_matrix = model_matrix;
 
+        this.world_size = 10;
+        this.world_height = 1;
+
         this.world_data = world_data;
         this.mesh_data = mesh_data;
         this.texture = texture;
@@ -27,11 +30,11 @@ class World {
     generateWorld() {
         let WORLD_DATA = [];
         // Generate world
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < this.world_size; i++) {
             let row = [];
-            for (let j = 0; j < 5; j++) {
+            for (let j = 0; j < this.world_size; j++) {
                 let rand = Math.random();
-                row.push(Math.floor(rand * rand * 5));
+                row.push(Math.floor(rand * rand * (this.world_height + 1)));
             }
             WORLD_DATA.push(row);
         }
