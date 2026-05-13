@@ -110,7 +110,7 @@ function main()
 
     // create world
     M.setTranslate(0.5, 0.5, 0.5);
-    let world = new World(WORLD_DATA, M, cube_mesh_data, redrock_texture);
+    let world = new World(null, M, cube_mesh_data, redrock_texture);
     scene.push(world);
 
     // Set up keyboard input

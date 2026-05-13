@@ -16,8 +16,26 @@ class World {
         this.mesh_data = mesh_data;
         this.texture = texture;
 
+        if (!this.world_data) {
+            this.generateWorld();
+        }
+
         this.meshes = [];
         this.generateMeshes();
+    }
+
+    generateWorld() {
+        let WORLD_DATA = [];
+        // Generate world
+        for (let i = 0; i < 5; i++) {
+            let row = [];
+            for (let j = 0; j < 5; j++) {
+                let rand = Math.random();
+                row.push(Math.floor(rand * rand * 5));
+            }
+            WORLD_DATA.push(row);
+        }
+        this.world_data = WORLD_DATA;
     }
 
     generateMeshes() {
@@ -46,10 +64,3 @@ class World {
         }
     }
 }
-
-const WORLD_DATA = [
-    [2, 0, 0, 1],
-    [1, 1, 0, 1],
-    [1, 0, 0, 2],
-    [1, 1, 1, 1],
-]
