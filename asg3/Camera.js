@@ -45,17 +45,17 @@ class Camera {
 
 
         if (move[0] == 1) {
-            this.moveRight();
+            this.move(1, 0);
         }
         if (move[0] == -1) {
-            this.moveLeft();
+            this.move(-1, 0);
         }
 
         if (move[1] == 1) {
-            this.moveForward();
+            this.move(0, 1);
         }
         if (move[1] == -1) {
-            this.moveBackward();
+            this.move(0, -1);
         }
 
         if (turn == 1) {
@@ -81,6 +81,31 @@ class Camera {
 
         this.at.set(this.eye);
         this.at.add(new_forward);
+
+        this.updateViewMatrix();
+    }
+
+    // move along the x-z plane. depends on look direction
+    move(x, y) {
+        let forward = this.getForwardDirection();
+        let right = this.getRightDirection();
+
+        // eliminate y-component
+        forward.elements[1] = 0;
+        forward.normalize();
+        right.elements[1] = 0;
+        right.normalize();
+
+        // set velocity
+        forward.mul(this.speed * y);
+        right.mul(this.speed * x);
+
+        // apply movement
+        this.at.add(forward);
+        this.eye.add(forward);
+
+        this.at.add(right);
+        this.eye.add(right);
 
         this.updateViewMatrix();
     }
@@ -145,6 +170,7 @@ class Camera {
         let forward = new Vector3();
         forward.set(this.at);
         forward.sub(this.eye);
+        forward.normalize();
 
         let right = forward.cross(this.up);
         right.normalize();
@@ -154,5 +180,24 @@ class Camera {
         this.eye.add(right);
 
         this.updateViewMatrix();
+    }
+
+    getForwardDirection() {
+        let forward = new Vector3();
+        forward.set(this.at);
+        forward.sub(this.eye);
+        forward.normalize();
+
+        return forward;
+    }
+
+    getRightDirection() {
+        let forward = this.getForwardDirection();
+
+        let right = forward.cross(this.up);
+        right.normalize();
+        right.mul(this.speed);
+
+        return right;
     }
 }
