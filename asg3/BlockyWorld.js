@@ -71,6 +71,7 @@ let texture_modifier_input;
 // Globals
 let camera = null;
 let scene = []; // array of meshes
+let world = null;
 
 
 function main()
@@ -88,19 +89,18 @@ function main()
     // Create Camera
     camera = new Camera(canvas.width/canvas.height);
 
-    // Create objects
-    
+    // Create floor
     let M = new Matrix4();
-    M.translate(0, 0, -10);
-    let GREEN = [0, 1, 0, 1];
+    M.translate(0, -1, 0);
+    M.scale(1, 0.05, 1);
+    let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0, 1], redrock_texture, 0);
+    scene.push(floor);
 
-    let cube = new Mesh(cube_mesh_data, M, GREEN, redrock_texture, 0.5);
-    scene.push(cube);
-
-    M.translate(0.5, 0.5, 0);
+    // create world
+    M.setTranslate(0, -0.5, 0);
     M.scale(0.5, 0.5, 0.5);
-    cube = new Mesh(cube_mesh_data, M, [1, 0, 1, 1], bluerock_texture, 0.5);
-    scene.push(cube);
+    let world = new World(WORLD_DATA, M, cube_mesh_data, redrock_texture);
+    scene.push(world);
 
     // Get Input objects
     rotation_input = document.getElementById("rotation");
@@ -116,6 +116,7 @@ function main()
     pollInputs();
 
     requestAnimationFrame(tick);
+    // renderScene();
 }
 
 

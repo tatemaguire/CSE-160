@@ -17,7 +17,7 @@ class Camera {
         this.aspect = aspect;
 
         this.eye = new Vector3([0, 0, 0]);
-        this.at = new Vector3([0, 0, -1]);
+        this.at = new Vector3([0, 0, 1]);
         this.up = new Vector3([0, 1, 0]);
 
         this.view_matrix = new Matrix4();
@@ -26,7 +26,7 @@ class Camera {
         this.projection_matrix = new Matrix4();
         this.updateProjectionMatrix();
 
-        this.speed = 0.5;
+        this.speed = 0.1;
         this.angular_speed = 5;
     }
 
