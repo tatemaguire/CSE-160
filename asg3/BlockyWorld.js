@@ -5,19 +5,14 @@ uniform mat4 u_ViewMatrix;
 uniform mat4 u_ModelMatrix;
 
 attribute vec4 a_Position;
-attribute vec3 a_Normal;
 attribute vec2 a_TexCoord;
 
 varying vec2 v_TexCoord;
-varying vec3 v_Normal;
 
 void main()
 {
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;
     v_TexCoord = a_TexCoord;
-
-    vec3 worldNormal = (u_ModelMatrix * vec4(a_Normal, 1)).xyz;
-    v_Normal = worldNormal;
 }
 `;
 
@@ -28,21 +23,15 @@ precision mediump float;
 uniform vec4 u_BaseColor;
 uniform sampler2D u_Sampler;
 uniform float u_TexColorWeight;
-uniform vec3 u_GlobalLight;
 
 varying vec2 v_TexCoord;
-varying vec3 v_Normal;
 
 void main()
 {
     vec4 texComponent = texture2D(u_Sampler, v_TexCoord) * u_TexColorWeight;
     vec4 baseComponent = u_BaseColor * (1.0 - u_TexColorWeight);
 
-    float lv = dot(normalize(v_Normal), u_GlobalLight);
-    lv = 1.0;
-    vec4 lightMultiplier = vec4(lv, lv, lv, 1.0);
-
-    gl_FragColor = (texComponent + baseComponent) * lightMultiplier;
+    gl_FragColor = texComponent + baseComponent;
 }
 `;
 
@@ -55,9 +44,7 @@ let shader_var = {
     u_ProjectionMatrix: -1,
     u_ViewMatrix: -1,
     u_ModelMatrix: -1,
-    u_GlobalLight: -1,
     a_Position: -1,
-    a_Normal: -1,
     a_TexCoord: -1,
     u_BaseColor: -1,
     u_Sampler: -1,
@@ -116,7 +103,7 @@ function main()
 
 function buildScene() {
     // Mesh and texture loading
-    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_NORMS, CUBE_TEXCOORD, CUBE_FACES);
+    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_TEXCOORD, CUBE_FACES);
     let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png', 0);
     let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png', 1);
 

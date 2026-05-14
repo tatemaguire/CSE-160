@@ -7,11 +7,10 @@ class World {
 
     meshes;
 
-
     constructor(world_data, model_matrix, mesh_data) {
         this.model_matrix = model_matrix;
 
-        this.world_size = 10;
+        this.world_size = 12;
         this.world_height = 1;
 
         this.world_data = world_data;

@@ -30,12 +30,7 @@ class Mesh {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.vert_buffer);
         gl.enableVertexAttribArray(shader_var.a_Position);
         gl.vertexAttribPointer(shader_var.a_Position, 3, gl.FLOAT, false, 0, 0);
-
-        // Setup normal vectors buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.norm_buffer);
-        gl.enableVertexAttribArray(shader_var.a_Normal);
-        gl.vertexAttribPointer(shader_var.a_Normal, 3, gl.FLOAT, false, 0, 0);
-
+        
         // Setup texcoord buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.texcoord_buffer);
         gl.enableVertexAttribArray(shader_var.a_TexCoord);
@@ -43,7 +38,6 @@ class Mesh {
 
         // Setup face indices buffer
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mesh_data.face_buffer);
-
 
         // Set uniform variables (baseColor, TexColorWeight, ModelMatrix)
         gl.uniform4fv(shader_var.u_BaseColor, this.base_color);
