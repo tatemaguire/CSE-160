@@ -4,12 +4,11 @@ class World {
 
     world_data;
     mesh_data;
-    texture;
 
     meshes;
 
 
-    constructor(world_data, model_matrix, mesh_data, texture) {
+    constructor(world_data, model_matrix, mesh_data) {
         this.model_matrix = model_matrix;
 
         this.world_size = 10;
@@ -17,7 +16,6 @@ class World {
 
         this.world_data = world_data;
         this.mesh_data = mesh_data;
-        this.texture = texture;
 
         if (!this.world_data) {
             this.generateWorld();
@@ -35,7 +33,8 @@ class World {
             for (let j = 0; j < this.world_size; j++) {
                 let rand = Math.random();
                 rand = 0.8; // TODO: remove
-                row.push(Math.floor(rand * rand * (this.world_height + 1)));
+                let height = Math.floor(rand * rand * (this.world_height + 1));
+                row.push({ height: height, tex_id: Math.floor(Math.random() * 2) });
             }
             WORLD_DATA.push(row);
         }
@@ -46,18 +45,18 @@ class World {
         this.meshes = [];
         for (let row in this.world_data) {
             for (let col in this.world_data) {
-                let height = this.world_data[row][col];
-                for (let y = 0; y < height; y++) {
-                    this.createCube(row, y, col);
+                let tile = this.world_data[row][col];
+                for (let y = 0; y < tile.height; y++) {
+                    this.createCube(row, y, col, tile.tex_id);
                 }
             }
         }
     }
 
-    createCube(x, y, z) {
+    createCube(x, y, z, tex_id) {
         let M = new Matrix4(this.model_matrix);
         M.translate(x, y, z);
-        let cube = new Mesh(this.mesh_data, M, [1,1,1,1], this.texture, 1);
+        let cube = new Mesh(this.mesh_data, M, [1,1,1,1], tex_id, 1);
         this.meshes.push(cube);
     }
 

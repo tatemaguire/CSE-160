@@ -128,18 +128,18 @@ function buildScene() {
     // create skybox
     M.setIdentity();
     M.scale(100, 100, 100);
-    let skybox = new Mesh(cube_mesh_data, M, [0.2, 0.5, 0.8, 1], bluerock_texture, 0);
+    let skybox = new Mesh(cube_mesh_data, M, [0.2, 0.5, 0.8, 1], 1, 0);
     scene.push(skybox);
 
     // create world
     M.setTranslate(0.5, 0.5, 0.5);
-    let world = new World(null, M, cube_mesh_data, redrock_texture);
+    let world = new World(null, M, cube_mesh_data, 0);
     scene.push(world);
 
     // Create floor
     M.setTranslate(world.world_size / 2, -0.025, world.world_size / 2);
     M.scale(world.world_size + 2, 0.05, world.world_size + 2);
-    let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], bluerock_texture, 0);
+    let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], 1, 0);
     scene.push(floor);
 }
 
