@@ -13,7 +13,6 @@ class TextureLoader {
         TextureLoader.most_recent_request_time = Date.now();
         image.src = filename;
 
-        return texture;
     }
 
     static loadTexture(gl, shader_var, texture, image, texture_id) {
