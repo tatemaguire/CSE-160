@@ -117,8 +117,8 @@ function main()
 function buildScene() {
     // Mesh and texture loading
     let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_NORMS, CUBE_TEXCOORD, CUBE_FACES);
-    let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png');
-    let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png');
+    let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png', 0);
+    let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png', 1);
 
     // Create Camera
     camera = new Camera(canvas.width/canvas.height);

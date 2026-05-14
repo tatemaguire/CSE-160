@@ -41,8 +41,6 @@ class Mesh {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mesh_data.face_buffer);
 
         // Setup texture uniform
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.uniform1i(shader_var.u_Sampler, 0);
 
         // Set uniform variables (baseColor, TexColorWeight, ModelMatrix)
@@ -52,6 +50,45 @@ class Mesh {
         // Set MVP matrices
         gl.uniformMatrix4fv(shader_var.u_ProjectionMatrix, false, camera.projection_matrix.elements);
         gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, camera.view_matrix.elements);
+        gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.model_matrix.elements);
+
+        // Draw cube according to position indices in cube_element_buffer
+        gl.drawElements(gl.TRIANGLES, this.mesh_data.num_verts, gl.UNSIGNED_BYTE, 0);
+    }
+
+    simpleRenderSetup(gl, shader_var, camera) {
+        // Setup vertex buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.vert_buffer);
+        gl.enableVertexAttribArray(shader_var.a_Position);
+        gl.vertexAttribPointer(shader_var.a_Position, 3, gl.FLOAT, false, 0, 0);
+
+        // Setup normal vectors buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.norm_buffer);
+        gl.enableVertexAttribArray(shader_var.a_Normal);
+        gl.vertexAttribPointer(shader_var.a_Normal, 3, gl.FLOAT, false, 0, 0);
+
+        // Setup texcoord buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.texcoord_buffer);
+        gl.enableVertexAttribArray(shader_var.a_TexCoord);
+        gl.vertexAttribPointer(shader_var.a_TexCoord, 2, gl.FLOAT, false, 0, 0);
+
+        // Setup face indices buffer
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mesh_data.face_buffer);
+
+        // Setup texture uniform
+        gl.uniform1i(shader_var.u_Sampler, 0);
+
+        // Set uniform variables (baseColor, TexColorWeight, ModelMatrix)
+        gl.uniform4fv(shader_var.u_BaseColor, this.base_color);
+        gl.uniform1f(shader_var.u_TexColorWeight, this.tex_color_weight);
+
+        // set VP matrices
+        gl.uniformMatrix4fv(shader_var.u_ProjectionMatrix, false, camera.projection_matrix.elements);
+        gl.uniformMatrix4fv(shader_var.u_ViewMatrix, false, camera.view_matrix.elements);
+    }
+
+    simpleRender(gl, shader_var, camera) {
+        // Set model matrix matrices
         gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.model_matrix.elements);
 
         // Draw cube according to position indices in cube_element_buffer

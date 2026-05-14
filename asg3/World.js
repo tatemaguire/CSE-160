@@ -34,6 +34,7 @@ class World {
             let row = [];
             for (let j = 0; j < this.world_size; j++) {
                 let rand = Math.random();
+                rand = 0.8; // TODO: remove
                 row.push(Math.floor(rand * rand * (this.world_height + 1)));
             }
             WORLD_DATA.push(row);
@@ -61,9 +62,9 @@ class World {
     }
 
     render(gl, shader_var, camera) {
-        // console.log(this.meshes);
+        this.meshes[0].simpleRenderSetup(gl, shader_var, camera);
         for (let mesh of this.meshes) {
-            mesh.render(gl, shader_var, camera);
+            mesh.simpleRender(gl, shader_var, camera);
         }
     }
 }
