@@ -120,7 +120,7 @@ function buildScene() {
 
     // create world
     M.setTranslate(0.5, 0.5, 0.5);
-    let world = new World(null, M, cube_mesh_data, 0);
+    let world = new World(gl, null, M, cube_mesh_data, 0);
     scene.push(world);
 
     // Create floor

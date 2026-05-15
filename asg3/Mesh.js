@@ -25,6 +25,17 @@ class Mesh {
         this.simpleRender(gl, shader_var, camera);
     }
 
+    // exportTransformedData() {
+    //     let data = {
+    //         verts: new Float32Array(this.mesh_data.verts),
+    //         texcoords: new Float32Array(this.mesh_data.texcoords),
+    //     };
+
+    //     for (let i = 0; i < data.verts.length; i += 3) {
+
+    //     }
+    // }
+
     simpleRenderSetup(gl, shader_var, camera) {
         // Setup vertex buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.vert_buffer);
