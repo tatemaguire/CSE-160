@@ -89,7 +89,7 @@ class World {
             for (let j = 0; j < this.world_size; j++) {
                 let rand = Math.random();
                 let height = Math.floor(rand * rand * (this.world_height + 1));
-                row.push({ height: height, tex_id: Math.floor(Math.random() * 2) });
+                row.push({ height: height, tex_id: Math.floor(Math.random() * 9) / 8 });
             }
             WORLD_DATA.push(row);
         }
