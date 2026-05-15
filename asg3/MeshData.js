@@ -7,16 +7,27 @@ class MeshData {
     texcoord_buffer;
     num_verts;
 
-    constructor(gl, verts, texcoords) {
-
-        this.vert_buffer = initBuffer(gl, gl.ARRAY_BUFFER, verts);
-        this.texcoord_buffer = initBuffer(gl, gl.ARRAY_BUFFER, texcoords);
-
+    constructor(gl, verts, texcoords, tex_ids) {
         // Set num verts
         this.num_verts = verts.length / 3;
-
+        
         this.verts = verts;
         this.texcoords = texcoords;
+        this.tex_ids = tex_ids;
+        
+        // If no tex_ids argument, just fill it with zeroes
+        if (!this.tex_ids) {
+            this.tex_ids = new Float32Array(this.verts.length); // array of zeroes
+        }
+
+        // TODO: remove these debug texids
+        // for (let i in this.tex_ids) {
+        //     this.tex_ids[i] = Math.floor(Math.random() * 2);
+        // }
+
+        this.vert_buffer = initBuffer(gl, gl.ARRAY_BUFFER, this.verts);
+        this.texcoord_buffer = initBuffer(gl, gl.ARRAY_BUFFER, this.texcoords);
+        this.tex_id_buffer = initBuffer(gl, gl.ARRAY_BUFFER, this.tex_ids);
     }
 }
 

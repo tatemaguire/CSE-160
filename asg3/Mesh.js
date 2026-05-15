@@ -25,17 +25,6 @@ class Mesh {
         this.simpleRender(gl, shader_var, camera);
     }
 
-    // exportTransformedData() {
-    //     let data = {
-    //         verts: new Float32Array(this.mesh_data.verts),
-    //         texcoords: new Float32Array(this.mesh_data.texcoords),
-    //     };
-
-    //     for (let i = 0; i < data.verts.length; i += 3) {
-
-    //     }
-    // }
-
     simpleRenderSetup(gl, shader_var, camera) {
         // Setup vertex buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.vert_buffer);
@@ -47,6 +36,10 @@ class Mesh {
         gl.enableVertexAttribArray(shader_var.a_TexCoord);
         gl.vertexAttribPointer(shader_var.a_TexCoord, 2, gl.FLOAT, false, 0, 0);
 
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.tex_id_buffer);
+        gl.enableVertexAttribArray(shader_var.a_TexID);
+        gl.vertexAttribPointer(shader_var.a_TexID, 1, gl.FLOAT, false, 0, 0);
+        
         // Set uniform variables (baseColor, TexColorWeight, ModelMatrix)
         gl.uniform4fv(shader_var.u_BaseColor, this.base_color);
         gl.uniform1f(shader_var.u_TexColorWeight, this.tex_color_weight);
@@ -58,12 +51,13 @@ class Mesh {
 
     simpleRender(gl, shader_var, camera) {
         // Setup texture uniform
-        gl.uniform1i(shader_var.u_Sampler, this.texture_id);
+        gl.uniform1i(shader_var.u_Sampler0, 0);
+        gl.uniform1i(shader_var.u_Sampler1, 1);
 
         // Set model matrix matrices
         gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.model_matrix.elements);
 
         // draw it
-        gl.drawArrays(gl.TRIANGLES, 0, this.mesh_data.num_verts,);
+        gl.drawArrays(gl.TRIANGLES, 0, this.mesh_data.num_verts);
     }
 }
