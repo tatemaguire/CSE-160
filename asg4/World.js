@@ -9,13 +9,14 @@ class World {
 
     transform;
 
-    constructor(gl, world_data, mesh_data) {
+    constructor(gl, world_data, mesh_data, tex_id) {
 
         this.world_size = 8;
         this.world_height = 4;
 
         this.world_data = world_data;
         this.cube_mesh_data = mesh_data;
+        this.tex_id = tex_id;
 
         this.verts = [];
         this.texcoords = [];
@@ -44,7 +45,7 @@ class World {
         }
 
         this.mesh_data = new MeshData(gl, new Float32Array(this.verts), new Float32Array(this.texcoords));
-        this.mesh = new Mesh(this.mesh_data, [1,1,1,1], 0, 1);
+        this.mesh = new Mesh(this.mesh_data, [1,1,1,1], this.tex_id, 1);
         this.mesh.transform = this.transform;
     }
 
@@ -82,4 +83,14 @@ const WORLD_DATA = [
     [3,0,0,0,0,0,0,3],
     [3,0,0,0,0,0,0,3],
     [4,3,3,4,4,3,3,4],
+];
+const WORLD_DATA_BLUE = [
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,0],
+    [0,1,1,0,0,0,2,0],
+    [0,0,0,0,0,0,0,0],
 ];

@@ -131,9 +131,13 @@ function buildScene() {
     scene.push(skybox);
 
     // create world
-    world = new World(gl, WORLD_DATA, cube_mesh_data);
+    world = new World(gl, WORLD_DATA, cube_mesh_data, 0);
     world.transform.position.set([0.5, 0.5, 0.5]);
     scene.push(world);
+
+    let blue_world = new World(gl, WORLD_DATA_BLUE, cube_mesh_data, 1);
+    blue_world.transform.position.set([0.5, 0.5, 0.5]);
+    scene.push(blue_world);
 
     // Create floor
     let floor = new Mesh(cube_mesh_data, [0.5, 0.5, 0.1, 1], 0, 0);
