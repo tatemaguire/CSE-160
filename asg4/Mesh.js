@@ -37,10 +37,6 @@ class Mesh {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.texcoord_buffer);
         gl.enableVertexAttribArray(shader_var.a_TexCoord);
         gl.vertexAttribPointer(shader_var.a_TexCoord, 2, gl.FLOAT, false, 0, 0);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.tex_id_buffer);
-        gl.enableVertexAttribArray(shader_var.a_TexID);
-        gl.vertexAttribPointer(shader_var.a_TexID, 1, gl.FLOAT, false, 0, 0);
         
         // Set uniform variables (baseColor, TexColorWeight, ModelMatrix)
         gl.uniform4fv(shader_var.u_BaseColor, this.base_color);

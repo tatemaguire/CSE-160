@@ -19,7 +19,6 @@ class World {
 
         this.verts = [];
         this.texcoords = [];
-        this.tex_ids = [];
 
         this.mesh = null;
         this.mesh_data = null;
@@ -34,24 +33,23 @@ class World {
     generateMesh(gl) {
         this.verts = [];
         this.texcoords = [];
-        this.tex_ids = [];
 
         for (let row in this.world_data) {
             for (let col in this.world_data[row]) {
                 let height = this.world_data[row][col];
                 for (let y = 0; y < height; y++) {
-                    this.createCube(row, y, col, 1);
+                    this.createCube(row, y, col);
                 }
             }
         }
 
-        this.mesh_data = new MeshData(gl, new Float32Array(this.verts), new Float32Array(this.texcoords), new Float32Array(this.tex_ids));
+        this.mesh_data = new MeshData(gl, new Float32Array(this.verts), new Float32Array(this.texcoords));
         this.mesh = new Mesh(this.mesh_data, [1,1,1,1], 0, 1);
         this.mesh.transform = this.transform;
     }
 
     // appends cube at x,y,z to the end of verts, texcoords, and tex_ids
-    createCube(x, y, z, tex_id) {
+    createCube(x, y, z) {
         let start_i = this.verts.length;
         
         for (let val of this.cube_mesh_data.verts) {
@@ -67,7 +65,6 @@ class World {
 
         for (let val of this.cube_mesh_data.texcoords) {
             this.texcoords.push(val);
-            this.tex_ids.push(tex_id);
         }
     }
 
