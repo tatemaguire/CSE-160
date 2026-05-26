@@ -67,8 +67,6 @@ let input = {
     right: false,
     up: false,
     down: false,
-    turn_left: false,
-    turn_right: false,
 };
 
 // Globals
@@ -123,18 +121,18 @@ function buildScene() {
     let M = new Matrix4();
 
     // create skybox
-    let skybox = new Mesh(cube_mesh_data, M, [0.2, 0.5, 0.8, 1], 0, 0);
+    let skybox = new Mesh(cube_mesh_data, [0.2, 0.5, 0.8, 1], 0, 0);
     // skybox.transform.scale = new Vector3([100, 100, 100]);
     skybox.transform.scale.set([100, 100, 100]);
     scene.push(skybox);
 
     // create world
-    world = new World(gl, WORLD_DATA, M, cube_mesh_data);
+    world = new World(gl, WORLD_DATA, cube_mesh_data);
     world.transform.position.set([0.5, 0.5, 0.5]);
     scene.push(world);
 
     // Create floor
-    let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], 0, 0);
+    let floor = new Mesh(cube_mesh_data, [0.5, 0.5, 0.1, 1], 0, 0);
     floor.transform.position.set([world.world_size / 2, -0.025, world.world_size / 2]);
     floor.transform.scale.set([world.world_size + 2, 0.05, world.world_size + 2]);
     scene.push(floor);
@@ -190,12 +188,6 @@ function keydown(ev) {
     if (ev.key == 'd') {
         input.right = true;
     }
-    if (ev.key == 'q') {
-        input.turn_left = true;
-    }
-    if (ev.key == 'e') {
-        input.turn_right = true;
-    }
 }
 
 function keyup(ev) {
@@ -210,12 +202,6 @@ function keyup(ev) {
     }
     if (ev.key == 'd') {
         input.right = false;
-    }
-    if (ev.key == 'q') {
-        input.turn_left = false;
-    }
-    if (ev.key == 'e') {
-        input.turn_right = false;
     }
 }
 

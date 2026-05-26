@@ -42,14 +42,9 @@ class Camera {
         let move_y = 0
         if (input.up) move_y++;
         if (input.down) move_y--;
-        
-        let turn = 0;
-        if (input.turn_left) turn++;
-        if (input.turn_right) turn--;
 
         // move the camera
         this.move(move_x, move_y);
-        this.rotateLook(-this.pan_speed * turn, 0);
     }
 
     rotateLook(x, y) {

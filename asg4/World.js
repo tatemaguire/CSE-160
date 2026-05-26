@@ -9,8 +9,7 @@ class World {
 
     transform;
 
-    constructor(gl, world_data, model_matrix, mesh_data) {
-        this.model_matrix = new Matrix4(model_matrix);
+    constructor(gl, world_data, mesh_data) {
 
         this.world_size = 8;
         this.world_height = 4;
@@ -47,7 +46,7 @@ class World {
         }
 
         this.mesh_data = new MeshData(gl, new Float32Array(this.verts), new Float32Array(this.texcoords), new Float32Array(this.tex_ids));
-        this.mesh = new Mesh(this.mesh_data, this.model_matrix, [1,1,1,1], 0, 1);
+        this.mesh = new Mesh(this.mesh_data, [1,1,1,1], 0, 1);
         this.mesh.transform = this.transform;
     }
 

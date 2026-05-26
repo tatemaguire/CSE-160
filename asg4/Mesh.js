@@ -1,16 +1,14 @@
 class Mesh {
 
     mesh_data;
-    model_matrix;
     base_color;
     texture_id;
     tex_color_weight;
 
     transform;
 
-    constructor(mesh_data, model_matrix, base_color, texture_id, tex_color_weight) {
+    constructor(mesh_data, base_color, texture_id, tex_color_weight) {
         this.mesh_data = mesh_data
-        this.model_matrix = new Matrix4(model_matrix);
         this.base_color = new Float32Array(base_color);
         this.texture_id = texture_id;
         this.tex_color_weight = tex_color_weight;
