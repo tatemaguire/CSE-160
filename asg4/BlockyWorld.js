@@ -131,7 +131,7 @@ function buildScene() {
     scene.push(skybox);
 
     // create world
-    world = new World(gl, WORLD_DATA, cube_mesh_data, 0);
+    world = new World(gl, WORLD_DATA_RED, cube_mesh_data, 0);
     world.transform.position.set([0.5, 0.5, 0.5]);
     scene.push(world);
 
@@ -140,9 +140,11 @@ function buildScene() {
     scene.push(blue_world);
 
     // Create floor
+    console.log(cube_mesh_data);
     let floor = new Mesh(cube_mesh_data, [0.5, 0.5, 0.1, 1], 0, 0);
-    floor.transform.position.set([world.world_size / 2, -0.025, world.world_size / 2]);
-    floor.transform.scale.set([world.world_size + 2, 0.05, world.world_size + 2]);
+    const world_size = WORLD_DATA_RED.length;
+    floor.transform.position.set([world_size / 2, -0.025, world_size / 2]);
+    floor.transform.scale.set([world_size + 2, 0.05, world_size + 2]);
     scene.push(floor);
 }
 

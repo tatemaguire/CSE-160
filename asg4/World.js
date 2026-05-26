@@ -1,70 +1,59 @@
 class World {
-
-    model_matrix;
-
-    world_data;
-    cube_mesh_data;
-
-    meshes;
-
+    
+    verts;
+    tex_coords;
+    mesh;
+    
     transform;
+    tex_id;
 
-    constructor(gl, world_data, mesh_data, tex_id) {
-
-        this.world_size = 8;
-        this.world_height = 4;
-
-        this.world_data = world_data;
-        this.cube_mesh_data = mesh_data;
+    constructor(gl, world_data, cube_mesh_data, tex_id) {
+        
+        this.verts = [];
+        this.texcoords = [];
+        this.mesh = null;
+        
+        this.transform = new Transform();
         this.tex_id = tex_id;
 
-        this.verts = [];
-        this.texcoords = [];
-
-        this.mesh = null;
-        this.mesh_data = null;
-
-        this.transform = new Transform();
-
-        this.gl = gl; // keep a reference
-
-        this.generateMesh(gl);
+        this.generateMesh(gl, world_data, cube_mesh_data);
     }
 
-    generateMesh(gl) {
+    // creates one fat mesh out of world_data
+    generateMesh(gl, world_data, cube_mesh_data) {
         this.verts = [];
         this.texcoords = [];
 
-        for (let row in this.world_data) {
-            for (let col in this.world_data[row]) {
-                let height = this.world_data[row][col];
+        for (let row in world_data) {
+            for (let col in world_data[row]) {
+                let height = world_data[row][col];
                 for (let y = 0; y < height; y++) {
-                    this.createCube(row, y, col);
+                    this.createCube(cube_mesh_data, row, y, col);
                 }
             }
         }
 
-        this.mesh_data = new MeshData(gl, new Float32Array(this.verts), new Float32Array(this.texcoords));
-        this.mesh = new Mesh(this.mesh_data, [1,1,1,1], this.tex_id, 1);
+        const mesh_data = new MeshData(gl, new Float32Array(this.verts), new Float32Array(this.texcoords));
+        this.mesh = new Mesh(mesh_data, [1,1,1,1], this.tex_id, 1);
         this.mesh.transform = this.transform;
     }
 
     // appends cube at x,y,z to the end of verts, texcoords, and tex_ids
-    createCube(x, y, z) {
+    createCube(mesh_data, x, y, z) {
         let start_i = this.verts.length;
         
-        for (let val of this.cube_mesh_data.verts) {
+        for (let val of mesh_data.verts) {
             this.verts.push(val);
         }
 
         for (let i = start_i; i < this.verts.length; i += 3) {
-            // I have no idea why I have to cast as numbers
+            // I have no idea why but I *have* to cast as numbers
             this.verts[i] += Number(x);
             this.verts[i+1] += Number(y);
             this.verts[i+2] += Number(z);
         }
 
-        for (let val of this.cube_mesh_data.texcoords) {
+        for (let val of mesh_data.texcoords) {
             this.texcoords.push(val);
         }
     }
@@ -74,7 +63,8 @@ class World {
     }
 }
 
-const WORLD_DATA = [
+
+const WORLD_DATA_RED = [
     [2,0,0,0,0,0,0,2],
     [3,0,0,0,0,0,0,3],
     [3,0,0,0,0,0,0,3],
