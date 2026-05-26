@@ -44,6 +44,7 @@ class Mesh {
         
         // Set uniform variables (baseColor, TexColorWeight, ModelMatrix)
         gl.uniform4fv(shader_var.u_BaseColor, this.base_color);
+        gl.uniform1i(shader_var.u_TexID, this.texture_id);
         gl.uniform1f(shader_var.u_TexColorWeight, this.tex_color_weight);
 
         // set VP matrices

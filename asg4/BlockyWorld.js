@@ -23,9 +23,11 @@ void main()
 let FSHADER_SOURCE = `
 precision mediump float;
 
-uniform vec4 u_BaseColor;
 uniform sampler2D u_Sampler0;
 uniform sampler2D u_Sampler1;
+
+uniform vec4 u_BaseColor;
+uniform int u_TexID;
 uniform float u_TexColorWeight;
 
 varying vec2 v_TexCoord;
@@ -33,10 +35,15 @@ varying float v_TexID;
 
 void main()
 {
-    float tex_id = v_TexID;
-    vec4 image0 = texture2D(u_Sampler0, v_TexCoord) * tex_id;
-    vec4 image1 = texture2D(u_Sampler1, v_TexCoord) * (1.0 - tex_id);
-    vec4 texComponent = (image0 + image1) * u_TexColorWeight;
+    vec4 image;
+    if (u_TexID == 0) {
+        image = texture2D(u_Sampler0, v_TexCoord);
+    }
+    else {
+        image = texture2D(u_Sampler1, v_TexCoord);
+    }
+    
+    vec4 texComponent = image * u_TexColorWeight;
     vec4 baseComponent = u_BaseColor * (1.0 - u_TexColorWeight);
 
     gl_FragColor = texComponent + baseComponent;
@@ -55,9 +62,10 @@ let shader_var = {
     a_Position: -1,
     a_TexCoord: -1,
     a_TexID: -1,
-    u_BaseColor: -1,
     u_Sampler0: -1,
     u_Sampler1: -1,
+    u_BaseColor: -1,
+    u_TexID: -1,
     u_TexColorWeight: -1,
 };
 
