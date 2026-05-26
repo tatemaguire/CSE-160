@@ -69,8 +69,6 @@ let input = {
     down: false,
     turn_left: false,
     turn_right: false,
-    place: false,
-    break: false,
 };
 
 // Globals
@@ -132,7 +130,7 @@ function buildScene() {
 
     // create world
     M.setTranslate(0.5, 0.5, 0.5);
-    world = new World(gl, null, M, cube_mesh_data, 0);
+    world = new World(gl, WORLD_DATA, M, cube_mesh_data);
     scene.push(world);
 
     // Create floor
@@ -147,7 +145,6 @@ function tick() {
     stats.begin();
 
     camera.parseInput(input);
-    world.parseInput(input, camera);
 
     if (TextureLoader.isDoneLoading()) {
         renderScene();
@@ -198,12 +195,6 @@ function keydown(ev) {
     }
     if (ev.key == 'e') {
         input.turn_right = true;
-    }
-    if (ev.key == 'r') {
-        input.place = true;
-    }
-    if (ev.key == 'f') {
-        input.break = true;
     }
 }
 
