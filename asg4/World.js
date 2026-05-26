@@ -7,6 +7,8 @@ class World {
 
     meshes;
 
+    transform;
+
     constructor(gl, world_data, model_matrix, mesh_data) {
         this.model_matrix = new Matrix4(model_matrix);
 
@@ -22,6 +24,8 @@ class World {
 
         this.mesh = null;
         this.mesh_data = null;
+
+        this.transform = new Transform();
 
         this.gl = gl; // keep a reference
 
@@ -44,6 +48,7 @@ class World {
 
         this.mesh_data = new MeshData(gl, new Float32Array(this.verts), new Float32Array(this.texcoords), new Float32Array(this.tex_ids));
         this.mesh = new Mesh(this.mesh_data, this.model_matrix, [1,1,1,1], 0, 1);
+        this.mesh.transform = this.transform;
     }
 
     // appends cube at x,y,z to the end of verts, texcoords, and tex_ids

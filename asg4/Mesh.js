@@ -6,12 +6,16 @@ class Mesh {
     texture_id;
     tex_color_weight;
 
+    transform;
+
     constructor(mesh_data, model_matrix, base_color, texture_id, tex_color_weight) {
         this.mesh_data = mesh_data
         this.model_matrix = new Matrix4(model_matrix);
         this.base_color = new Float32Array(base_color);
         this.texture_id = texture_id;
         this.tex_color_weight = tex_color_weight;
+
+        this.transform = new Transform();
 
         if (!mesh_data.vert_buffer || !mesh_data.texcoord_buffer || !mesh_data.num_verts) {
             console.error("Mesh data is invalid");
@@ -55,7 +59,8 @@ class Mesh {
         gl.uniform1i(shader_var.u_Sampler1, 1);
 
         // Set model matrix matrices
-        gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.model_matrix.elements);
+        this.transform.calculateMatrices();
+        gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.transform.modelMatrix.elements);
 
         // draw it
         gl.drawArrays(gl.TRIANGLES, 0, this.mesh_data.num_verts);

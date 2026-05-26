@@ -123,20 +123,19 @@ function buildScene() {
     let M = new Matrix4();
 
     // create skybox
-    M.setIdentity();
-    M.scale(100, 100, 100);
     let skybox = new Mesh(cube_mesh_data, M, [0.2, 0.5, 0.8, 1], 0, 0);
+    skybox.transform.scale = new Vector3([100, 100, 100]);
     scene.push(skybox);
 
     // create world
-    M.setTranslate(0.5, 0.5, 0.5);
     world = new World(gl, WORLD_DATA, M, cube_mesh_data);
+    world.transform.position = new Vector3([0.5, 0.5, 0.5]);
     scene.push(world);
 
     // Create floor
-    M.setTranslate(world.world_size / 2, -0.025, world.world_size / 2);
-    M.scale(world.world_size + 2, 0.05, world.world_size + 2);
     let floor = new Mesh(cube_mesh_data, M, [0.5, 0.5, 0.1, 1], 0, 0);
+    floor.transform.position = new Vector3([world.world_size / 2, -0.025, world.world_size / 2]);
+    floor.transform.scale = new Vector3([world.world_size + 2, 0.05, world.world_size + 2]);
     scene.push(floor);
 }
 

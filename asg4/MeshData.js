@@ -20,11 +20,6 @@ class MeshData {
             this.tex_ids = new Float32Array(this.verts.length); // array of zeroes
         }
 
-        // TODO: remove these debug texids
-        // for (let i in this.tex_ids) {
-        //     this.tex_ids[i] = Math.floor(Math.random() * 2);
-        // }
-
         this.vert_buffer = initBuffer(gl, gl.ARRAY_BUFFER, this.verts);
         this.texcoord_buffer = initBuffer(gl, gl.ARRAY_BUFFER, this.texcoords);
         this.tex_id_buffer = initBuffer(gl, gl.ARRAY_BUFFER, this.tex_ids);
