@@ -93,9 +93,6 @@ function main()
     initProgram();
     getShaderVariableLocations();
 
-    // Store global light direction
-    gl.uniform3f(shader_var.u_GlobalLight, 0.8, 0.3, -1);
-
     buildScene();
 
     // Set up keyboard input
@@ -104,7 +101,6 @@ function main()
     canvas.onmousemove = mousemove;
 
     requestAnimationFrame(tick);
-    // renderScene();
 }
 
 
@@ -119,10 +115,14 @@ function buildScene() {
     let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png', 0);
     let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png', 1);
 
+    // Setup texture uniform
+    gl.uniform1i(shader_var.u_Sampler0, 0);
+    gl.uniform1i(shader_var.u_Sampler1, 1);
+
     // Create Camera
     camera = new Camera(canvas.width/canvas.height);
 
-    let M = new Matrix4();
+    const world_size = WORLD_DATA_RED.length;
 
     // create skybox
     let skybox = new Mesh(cube_mesh_data, [0.2, 0.5, 0.8, 1], 0, 0);
@@ -140,9 +140,7 @@ function buildScene() {
     scene.push(blue_world);
 
     // Create floor
-    console.log(cube_mesh_data);
     let floor = new Mesh(cube_mesh_data, [0.5, 0.5, 0.1, 1], 0, 0);
-    const world_size = WORLD_DATA_RED.length;
     floor.transform.position.set([world_size / 2, -0.025, world_size / 2]);
     floor.transform.scale.set([world_size + 2, 0.05, world_size + 2]);
     scene.push(floor);
@@ -169,7 +167,6 @@ function tick() {
 
 // Render all meshes
 function renderScene() {
-
     // Clear previous frame
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -178,6 +175,7 @@ function renderScene() {
         mesh.render(gl, shader_var, camera);
     }
 }
+
 
 // ----------------------------------------------------------------------------
 // Input

@@ -49,10 +49,6 @@ class Mesh {
     }
 
     simpleRender(gl, shader_var, camera) {
-        // Setup texture uniform
-        gl.uniform1i(shader_var.u_Sampler0, 0);
-        gl.uniform1i(shader_var.u_Sampler1, 1);
-
         // Set model matrix matrices
         this.transform.calculateMatrices();
         gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.transform.model_matrix.elements);
