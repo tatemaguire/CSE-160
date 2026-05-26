@@ -6,7 +6,6 @@ uniform mat4 u_ModelMatrix;
 
 attribute vec4 a_Position;
 attribute vec2 a_TexCoord;
-attribute float a_TexID;
 
 varying vec2 v_TexCoord;
 varying float v_TexID;
@@ -15,7 +14,6 @@ void main()
 {
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;
     v_TexCoord = a_TexCoord;
-    v_TexID = a_TexID;
 }
 `;
 
@@ -31,7 +29,6 @@ uniform int u_TexID;
 uniform float u_TexColorWeight;
 
 varying vec2 v_TexCoord;
-varying float v_TexID;
 
 void main()
 {
@@ -61,7 +58,6 @@ let shader_var = {
     u_ModelMatrix: -1,
     a_Position: -1,
     a_TexCoord: -1,
-    a_TexID: -1,
     u_Sampler0: -1,
     u_Sampler1: -1,
     u_BaseColor: -1,
