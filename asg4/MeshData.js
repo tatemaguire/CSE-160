@@ -2,20 +2,24 @@ class MeshData {
 
     verts;
     texcoords;
+    norms;
 
     vert_buffer;
     texcoord_buffer;
+    norm_buffer;
     num_verts;
 
-    constructor(gl, verts, texcoords) {
+    constructor(gl, verts, texcoords, norms) {
         // Set num verts
         this.num_verts = verts.length / 3;
         
         this.verts = verts;
         this.texcoords = texcoords;
+        this.norms = norms;
 
         this.vert_buffer = initBuffer(gl, gl.ARRAY_BUFFER, this.verts);
         this.texcoord_buffer = initBuffer(gl, gl.ARRAY_BUFFER, this.texcoords);
+        this.norm_buffer = initBuffer(gl, gl.ARRAY_BUFFER, this.norms);
     }
 }
 
@@ -135,6 +139,51 @@ const CUBE_TEXCOORD = new Float32Array([
     1, 1,
     0, 1,
 ]);
+const CUBE_NORMS = new Float32Array([
+    // Face 0123
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0,
+    // Face 3267
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+    // Face 7654
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+    // Face 4510
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+    // Face 2156
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+    // Face 7403
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+]);
+
 // const CUBE_FACES = new Uint8Array([
 //     0, 1, 2,
 //     0, 2, 3,

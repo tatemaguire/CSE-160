@@ -3,17 +3,20 @@ let VSHADER_SOURCE = `
 uniform mat4 u_ProjectionMatrix;
 uniform mat4 u_ViewMatrix;
 uniform mat4 u_ModelMatrix;
+uniform mat4 u_NormalMatrix;
 
 attribute vec4 a_Position;
 attribute vec2 a_TexCoord;
+attribute vec4 a_Normal;
 
 varying vec2 v_TexCoord;
-varying float v_TexID;
+varying vec3 v_Normal;
 
 void main()
 {
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;
     v_TexCoord = a_TexCoord;
+    v_Normal = (u_NormalMatrix * a_Normal).xyz;
 }
 `;
 
@@ -29,6 +32,7 @@ uniform int u_TexID;
 uniform float u_TexColorWeight;
 
 varying vec2 v_TexCoord;
+varying vec3 v_Normal;
 
 void main()
 {
@@ -58,6 +62,7 @@ let shader_var = {
     u_ModelMatrix: -1,
     a_Position: -1,
     a_TexCoord: -1,
+    a_Normal: -1,
     u_Sampler0: -1,
     u_Sampler1: -1,
     u_BaseColor: -1,
@@ -111,7 +116,7 @@ function main()
 
 function buildScene() {
     // Mesh and texture loading
-    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_TEXCOORD);
+    let cube_mesh_data = new MeshData(gl, CUBE_VERTS, CUBE_TEXCOORD, CUBE_NORMS);
     let redrock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/redrock.png', 0);
     let bluerock_texture = TextureLoader.requestTexture(gl, shader_var, './assets/bluerock.png', 1);
 

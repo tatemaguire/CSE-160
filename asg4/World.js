@@ -23,6 +23,7 @@ class World {
     generateMesh(gl, world_data, cube_mesh_data) {
         this.verts = [];
         this.texcoords = [];
+        this.norms = [];
 
         for (let row in world_data) {
             for (let col in world_data[row]) {
@@ -33,7 +34,10 @@ class World {
             }
         }
 
-        const mesh_data = new MeshData(gl, new Float32Array(this.verts), new Float32Array(this.texcoords));
+        const mesh_data = new MeshData(gl, 
+            new Float32Array(this.verts), 
+            new Float32Array(this.texcoords), 
+            new Float32Array(this.norms));
         this.mesh = new Mesh(mesh_data, [1,1,1,1], this.tex_id, 1);
         this.mesh.transform = this.transform;
     }
@@ -55,6 +59,10 @@ class World {
 
         for (let val of mesh_data.texcoords) {
             this.texcoords.push(val);
+        }
+
+        for (let val of mesh_data.norms) {
+            this.norms.push(val);
         }
     }
 
