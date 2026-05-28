@@ -15,7 +15,10 @@ class Mesh {
 
         this.transform = new Transform();
 
-        if (!mesh_data.vert_buffer || !mesh_data.texcoord_buffer || !mesh_data.num_verts) {
+        if (!mesh_data.vert_buffer || 
+                !mesh_data.texcoord_buffer || 
+                !mesh_data.norm_buffer || 
+                !mesh_data.num_verts) {
             console.error("Mesh data is invalid");
             return;
         }
@@ -37,6 +40,11 @@ class Mesh {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.texcoord_buffer);
         gl.enableVertexAttribArray(shader_var.a_TexCoord);
         gl.vertexAttribPointer(shader_var.a_TexCoord, 2, gl.FLOAT, false, 0, 0);
+
+        // Setup norm buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_data.norm_buffer);
+        gl.enableVertexAttribArray(shader_var.a_Normal);
+        gl.vertexAttribPointer(shader_var.a_Normal, 3, gl.FLOAT, false, 0, 0);
         
         // Set uniform variables (baseColor, TexColorWeight, ModelMatrix)
         gl.uniform4fv(shader_var.u_BaseColor, this.base_color);

@@ -16,7 +16,7 @@ void main()
 {
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;
     v_TexCoord = a_TexCoord;
-    v_Normal = (u_NormalMatrix * a_Normal).xyz;
+    v_Normal = a_Normal.xyz;
 }
 `;
 
@@ -48,6 +48,9 @@ void main()
     vec4 baseComponent = u_BaseColor * (1.0 - u_TexColorWeight);
 
     gl_FragColor = texComponent + baseComponent;
+
+    vec3 normal = (v_Normal + 1.0) * 0.5;
+    gl_FragColor = vec4(normal, 1.0);
 }
 `;
 
