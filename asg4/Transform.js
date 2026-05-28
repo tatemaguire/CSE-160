@@ -28,7 +28,7 @@ class Transform {
             .rotate(rot[2], 0, 0, 1)
             .scale(sca[0], sca[1], sca[2]);
         
-        this.normal_matrix.setInverseOf(this.model_matrix).transpose();
+        this.normal_matrix.set(this.model_matrix).invert().transpose();
     }
 
 }

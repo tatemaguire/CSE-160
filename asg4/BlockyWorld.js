@@ -7,16 +7,21 @@ uniform mat4 u_NormalMatrix;
 
 attribute vec4 a_Position;
 attribute vec2 a_TexCoord;
-attribute vec4 a_Normal;
+attribute vec3 a_Normal;
 
+varying vec3 v_Position;
 varying vec2 v_TexCoord;
 varying vec3 v_Normal;
 
 void main()
 {
-    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * a_Position;
+    vec4 worldPosition = u_ModelMatrix * a_Position;
+
+    gl_Position = u_ProjectionMatrix * u_ViewMatrix * worldPosition;
+
+    v_Position = worldPosition.xyz;
     v_TexCoord = a_TexCoord;
-    v_Normal = a_Normal.xyz;
+    v_Normal = (u_NormalMatrix * vec4(a_Normal, 1.0)).xyz;
 }
 `;
 
@@ -31,11 +36,17 @@ uniform vec4 u_BaseColor;
 uniform int u_TexID;
 uniform float u_TexColorWeight;
 
+uniform vec3 u_LightPosition;
+uniform vec4 u_LightColor;
+uniform float u_LightIntensity;
+
+varying vec3 v_Position;
 varying vec2 v_TexCoord;
 varying vec3 v_Normal;
 
 void main()
 {
+    // Get pixel color from texture
     vec4 image;
     if (u_TexID == 0) {
         image = texture2D(u_Sampler0, v_TexCoord);
@@ -44,13 +55,23 @@ void main()
         image = texture2D(u_Sampler1, v_TexCoord);
     }
     
+    // Combine texture and base color into "color"
     vec4 texComponent = image * u_TexColorWeight;
     vec4 baseComponent = u_BaseColor * (1.0 - u_TexColorWeight);
+    vec4 color = texComponent + baseComponent;
 
-    gl_FragColor = texComponent + baseComponent;
+    // Lighting
+    vec3 normal = normalize(v_Normal);
+    vec3 lightDistance = u_LightPosition - v_Position;
+    vec3 lightDir = normalize(lightDistance);
+    float NdotL = dot(normal, lightDir);
 
-    vec3 normal = (v_Normal + 1.0) * 0.5;
-    gl_FragColor = vec4(normal, 1.0);
+    NdotL *=  (1.0 - length(lightDistance) / 10.0);
+    NdotL = clamp(NdotL, 0.0, 1.0);
+
+    color *= NdotL;
+
+    gl_FragColor = vec4(color.xyz, 1);
 }
 `;
 
@@ -63,6 +84,7 @@ let shader_var = {
     u_ProjectionMatrix: -1,
     u_ViewMatrix: -1,
     u_ModelMatrix: -1,
+    u_NormalMatrix: -1,
     a_Position: -1,
     a_TexCoord: -1,
     a_Normal: -1,
@@ -71,6 +93,9 @@ let shader_var = {
     u_BaseColor: -1,
     u_TexID: -1,
     u_TexColorWeight: -1,
+    u_LightPosition: -1,
+    u_LightColor: -1,
+    u_LightIntensity: -1,
 };
 
 // Input Status
@@ -126,6 +151,17 @@ function buildScene() {
     // Setup texture uniform
     gl.uniform1i(shader_var.u_Sampler0, 0);
     gl.uniform1i(shader_var.u_Sampler1, 1);
+
+    // Setup global light
+    gl.uniform3f(shader_var.u_LightPosition, 0, 5, 5);
+    gl.uniform4f(shader_var.u_LightColor, 1, 1, 1, 1);
+    gl.uniform1f(shader_var.u_LightIntensity, 1);
+
+    // Create cube at light position
+    let lightCube = new Mesh(cube_mesh_data, [1, 1, 1, 1], 0, 0);
+    lightCube.transform.position.set([0, 5, 5]);
+    lightCube.transform.scale.set([0.5, 0.5, 0.5]);
+    scene.push(lightCube);
 
     // Create Camera
     camera = new Camera(canvas.width/canvas.height);

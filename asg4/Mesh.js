@@ -60,6 +60,7 @@ class Mesh {
         // Set model matrix matrices
         this.transform.calculateMatrices();
         gl.uniformMatrix4fv(shader_var.u_ModelMatrix, false, this.transform.model_matrix.elements);
+        gl.uniformMatrix4fv(shader_var.u_NormalMatrix, false, this.transform.normal_matrix.elements);
 
         // draw it
         gl.drawArrays(gl.TRIANGLES, 0, this.mesh_data.num_verts);
