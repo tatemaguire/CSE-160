@@ -34,6 +34,7 @@ function main() {
     // Setup Scene
     scene = new THREE.Scene();
     buildScene();
+    loadBackground();
 
     // Run Program
     requestAnimationFrame(tick)
@@ -44,15 +45,15 @@ function buildScene() {
 
     // ------------ Lighting -------------
 
-    const dirLight = new THREE.DirectionalLight(0xFFFFFF, 3);
+    const dirLight = new THREE.DirectionalLight(0xEEDDFF, 2);
     dirLight.position.set(-1, 2, 4);
     scene.add(dirLight);
 
-    const ambLight = new THREE.AmbientLight(0xFFFFFF, 0.1);
+    const ambLight = new THREE.AmbientLight(0xAAAAFF, 0.2);
     scene.add(ambLight);
 
-    const vaseLight = new THREE.PointLight(0xFFFF99, 3, 1);
-    vaseLight.position.y = 0.7;
+    const vaseLight = new THREE.PointLight(0xFFFF99, 1, 2);
+    vaseLight.position.y = 0.5;
 
     // ------------ Meshes -------------
 
@@ -73,6 +74,21 @@ function buildScene() {
         scene.add(vase);
     });
 
+}
+
+
+function loadBackground() {
+    const cubeTexLoader = new THREE.CubeTextureLoader();
+    const bgTexture = cubeTexLoader.load([
+        "./assets/skybox/posx.jpg",
+        "./assets/skybox/negx.jpg",
+        "./assets/skybox/posy.jpg",
+        "./assets/skybox/negy.jpg",
+        "./assets/skybox/posz.jpg",
+        "./assets/skybox/negz.jpg",
+    ]);
+
+    scene.background = bgTexture;
 }
 
 
