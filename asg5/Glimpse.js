@@ -7,6 +7,7 @@ import { Mountain } from "./Mountain.js";
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
 const gltfLoader = new GLTFLoader();
+const texLoader = new THREE.TextureLoader();
 
 let camera;
 let controls;
@@ -52,7 +53,13 @@ function buildScene() {
 
     // ------------ Meshes -------------
 
-    const mtn = new Mountain();
+    const rock_texture = texLoader.load("./assets/rock.png");
+    rock_texture.colorSpace = THREE.SRGBColorSpace;
+    rock_texture.wrapS = THREE.RepeatWrapping;
+    rock_texture.wrapT = THREE.RepeatWrapping;
+    rock_texture.repeat.set(4, 1);
+
+    const mtn = new Mountain(rock_texture);
     scene.add(mtn);
 
     // Vase
