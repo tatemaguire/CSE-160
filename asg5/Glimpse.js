@@ -14,6 +14,8 @@ const blueMaterial = new THREE.MeshPhongMaterial({color: 0x2211aa});
 const cube = new THREE.Mesh(geometry, blueMaterial);
 scene.add(cube);
 
+const myvar = 10;
+
 const light = new THREE.DirectionalLight(0xFFFFFF, 3);
 light.position.set(-1, 2, 4);
 scene.add(light);
