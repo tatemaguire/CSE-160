@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-
+import { Mountain } from "./Mountain.js";
 
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
@@ -14,11 +14,12 @@ const blueMaterial = new THREE.MeshPhongMaterial({color: 0x2211aa});
 const cube = new THREE.Mesh(geometry, blueMaterial);
 scene.add(cube);
 
-const myvar = 10;
-
 const light = new THREE.DirectionalLight(0xFFFFFF, 3);
 light.position.set(-1, 2, 4);
 scene.add(light);
+
+const mtn = new Mountain();
+scene.add(mtn);
 
 
 function main() {
