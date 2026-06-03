@@ -18,11 +18,6 @@ controls.update();
 
 const scene = new THREE.Scene();
 
-const geometry = new THREE.BoxGeometry();
-const blueMaterial = new THREE.MeshPhongMaterial({color: 0x2211aa});
-const cube = new THREE.Mesh(geometry, blueMaterial);
-scene.add(cube);
-
 const dirLight = new THREE.DirectionalLight(0xFFFFFF, 3);
 dirLight.position.set(-1, 2, 4);
 scene.add(dirLight);
@@ -35,16 +30,15 @@ scene.add(mtn);
 
 
 function main() {
+
+
     requestAnimationFrame(tick)
 }
 main();
 
 
 function tick(time) {
-    time *= 0.001;
-
-    cube.rotation.y = time;
-    cube.rotation.x = time;
+    // time *= 0.001;
     
     if (resizeRendererToDisplaySize()) {
         const canvas = renderer.domElement;
