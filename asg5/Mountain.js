@@ -12,18 +12,26 @@ class Mountain extends THREE.Object3D {
     }
 
     _buildMountain() {
-        const pyramid = new THREE.ConeGeometry(1, 1, 4);
-        const material = new THREE.MeshPhongMaterial({ color: 0xAAAAAA });
+        this._pyramid = new THREE.ConeGeometry(1, 1, 4);
+        this._icosahedron = new THREE.IcosahedronGeometry(1);
 
-        const p1 = new THREE.Mesh(pyramid, material);
+        this._addIco().position.set(-1, 0, 0);
+
+        this._addPyr().position.set(1, 0, 0);
+    }
+
+    _addIco() {
+        const i1 = new THREE.Mesh(this._icosahedron, this.rock_material);
+        i1.scale.set(0.4, 0.4, 0.4);
+        this.add(i1);
+        return i1
+    }
+    
+    _addPyr() {
+        const p1 = new THREE.Mesh(this._pyramid, this.rock_material);
         p1.scale.set(0.4, 0.4, 0.4);
-        p1.position.set(-1, 0, 0);
         this.add(p1);
-
-        const p2 = new THREE.Mesh(pyramid, this.rock_material);
-        p2.scale.set(0.4, 0.4, 0.4);
-        p2.position.set(1, 0, 0);
-        this.add(p2);
+        return p1;
     }
 }
 

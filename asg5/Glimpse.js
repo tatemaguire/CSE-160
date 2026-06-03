@@ -20,7 +20,7 @@ function main() {
 
     // Setup camera
     camera = new THREE.PerspectiveCamera(75, 2, 0.1, 50);
-    camera.position.z = 4;
+    camera.position.z = 3;
 
     // Setup controls
     controls = new OrbitControls(camera, renderer.domElement);
@@ -72,6 +72,7 @@ function buildScene() {
         vase.scale.set(0.3, 0.3, 0.3);
         vase.attach(vaseLight);
         scene.add(vase);
+        vase.visible = false; //TODO: remove
     });
 
 }
