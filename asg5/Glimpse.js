@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Mountain } from "./Mountain.js";
 
 
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
+const gltfLoader = new GLTFLoader();
 
 let camera;
 let controls;
@@ -14,7 +16,7 @@ main();
 
 
 function main() {
-    
+
     // Setup camera
     camera = new THREE.PerspectiveCamera(75, 2, 0.1, 50);
     camera.position.z = 4;
@@ -52,6 +54,14 @@ function buildScene() {
 
     const mtn = new Mountain();
     scene.add(mtn);
+
+    // Vase
+    gltfLoader.loadAsync("assets/vase.glb").then((gltf) => {
+        const vase = gltf.scene;
+        vase.scale.set(0.3, 0.3, 0.3);
+        scene.add(vase);
+    });
+
 }
 
 
