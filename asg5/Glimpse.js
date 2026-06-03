@@ -1,11 +1,20 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Mountain } from "./Mountain.js";
 
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
 
-const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 5);
-camera.position.z = 2;
+const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 50);
+camera.position.z = 4;
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enablePan = false;
+controls.minDistance = 1;
+controls.maxDistance = 30;
+controls.enableDamping = true;
+controls.dampingFactor = 0.15;
+controls.update();
 
 const scene = new THREE.Scene();
 
@@ -14,9 +23,12 @@ const blueMaterial = new THREE.MeshPhongMaterial({color: 0x2211aa});
 const cube = new THREE.Mesh(geometry, blueMaterial);
 scene.add(cube);
 
-const light = new THREE.DirectionalLight(0xFFFFFF, 3);
-light.position.set(-1, 2, 4);
-scene.add(light);
+const dirLight = new THREE.DirectionalLight(0xFFFFFF, 3);
+dirLight.position.set(-1, 2, 4);
+scene.add(dirLight);
+
+const ambLight = new THREE.AmbientLight(0xFFFFFF, 0.1);
+scene.add(ambLight);
 
 const mtn = new Mountain();
 scene.add(mtn);
@@ -33,7 +45,6 @@ function tick(time) {
 
     cube.rotation.y = time;
     cube.rotation.x = time;
-
     
     if (resizeRendererToDisplaySize()) {
         const canvas = renderer.domElement;
@@ -41,6 +52,7 @@ function tick(time) {
         camera.updateProjectionMatrix();
     }
 
+    controls.update();
     renderer.render(scene, camera);
 
     requestAnimationFrame(tick);
