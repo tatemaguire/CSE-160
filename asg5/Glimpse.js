@@ -51,6 +51,9 @@ function buildScene() {
     const ambLight = new THREE.AmbientLight(0xFFFFFF, 0.1);
     scene.add(ambLight);
 
+    const vaseLight = new THREE.PointLight(0xFFFF99, 3, 1);
+    vaseLight.position.y = 0.7;
+
     // ------------ Meshes -------------
 
     const rock_texture = texLoader.load("./assets/rock.png");
@@ -66,6 +69,7 @@ function buildScene() {
     gltfLoader.loadAsync("assets/vase.glb").then((gltf) => {
         const vase = gltf.scene;
         vase.scale.set(0.3, 0.3, 0.3);
+        vase.attach(vaseLight);
         scene.add(vase);
     });
 
