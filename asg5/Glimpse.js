@@ -66,13 +66,23 @@ function buildScene() {
     const mtn = new Mountain(rock_texture);
     scene.add(mtn);
 
+    const mtn2 = new Mountain(rock_texture);
+    mtn2.position.set(0.2, 0.4, -0.7);
+    mtn2.scale.set(1.2, 1.3, 1.2);
+    mtn2.rotation.set(0.9, Math.PI, 0);
+    scene.add(mtn2);
+
     // Vase
     gltfLoader.loadAsync("assets/vase.glb").then((gltf) => {
         const vase = gltf.scene;
         vase.scale.set(0.3, 0.3, 0.3);
         vase.attach(vaseLight);
+
+        vase.position.set(0, 0.47, 0);
+        vase.rotation.set(Math.PI * 0.47, 0, 0.3);
+
         scene.add(vase);
-        vase.visible = false; //TODO: remove
+        // vase.visible = false; //TODO: remove
     });
 
 }
