@@ -10,11 +10,16 @@ const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
 const gltfLoader = new GLTFLoader();
 const texLoader = new THREE.TextureLoader();
 
+let mousepos = { x: 0, y: 0 };
+
 let camera;
 let controls;
 let scene;
 
 let grasses = [];
+let spotlight = null;
+let cursor = null;
+let raycaster = null;
 
 main();
 
@@ -34,13 +39,25 @@ function main() {
     controls.dampingFactor = 0.15;
     controls.update();
 
+    // Setup 3D Cursor
+    cursor = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial());
+    cursor.scale.set(0.2, 0.2, 0.2);
+    cursor.name = "cursor";
+    cursor.visible = false;
+
+    raycaster = new THREE.Raycaster();
+    
     // Setup Scene
     scene = new THREE.Scene();
+    scene.add(cursor);
     buildScene();
     loadBackground();
+    
 
     // Run Program
     requestAnimationFrame(tick)
+
+    canvas.addEventListener("mousemove", mouseMove);
 }
 
 
@@ -57,6 +74,11 @@ function buildScene() {
 
     const vaseLight = new THREE.PointLight(0xFFFF99, 0.5, 2);
     vaseLight.position.y = 0.5;
+
+    spotlight = new THREE.SpotLight(0xFFFFFF, 100, 10, 0.1, 0.5);
+    spotlight.position.set(0, 5, 2);
+    scene.add(spotlight);
+    spotlight.target = cursor;
 
     // ------------ Meshes -------------
 
@@ -157,6 +179,7 @@ function tick(time) {
     grasses.forEach((grass) => {grass.update(time);});
 
     // Update
+    spotlight.visible = update3DCursor();
     controls.update();
     renderer.render(scene, camera);
 
@@ -174,4 +197,38 @@ function resizeRendererToDisplaySize() {
         renderer.setSize(width, height, false);
     }
     return needResize;
+}
+
+
+function update3DCursor() {
+    raycaster.setFromCamera(new THREE.Vector2(mousepos.x, -mousepos.y), camera);
+    const results = raycaster.intersectObject(scene, true);
+
+    if (!results[0]) return false;
+
+    let p;
+    if (results[0].name === "cursor") {
+        p = results[0].point;
+    }
+    else {
+        if (!results[1]) return false;
+        p = results[1].point;
+    }
+
+    cursor.position.set(p.x, p.y, p.z);
+    return true;
+}
+
+
+function mouseMove(ev) {
+    let rawmousepos = { x: 0, y: 0};
+
+    rawmousepos.x = ev.clientX;
+    rawmousepos.y = ev.clientY;
+
+    mousepos.x = rawmousepos.x / canvas.clientWidth;
+    mousepos.y = rawmousepos.y / canvas.clientHeight;
+
+    mousepos.x = mousepos.x * 2 - 1;
+    mousepos.y = mousepos.y * 2 - 1;
 }
