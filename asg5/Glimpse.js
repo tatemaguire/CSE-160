@@ -84,6 +84,14 @@ function buildScene() {
         scene.add(vase);
     });
 
+    // -------------- Stream --------------
+
+    const stream_geo = new THREE.PlaneGeometry(0.1, 1);
+    const stream_mat = new THREE.MeshBasicMaterial({color: 0xFFFF00});
+    const stream = new THREE.Mesh(stream_geo, stream_mat);
+    stream.position.set(-0.2, -0.05, 0.6);
+    scene.add(stream);
+
 }
 
 
