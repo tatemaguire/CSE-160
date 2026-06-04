@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Mountain } from "./Mountain.js";
+import { Grass } from "./Grass.js";
 
 
 const canvas = document.querySelector('#c');
@@ -12,6 +13,8 @@ const texLoader = new THREE.TextureLoader();
 let camera;
 let controls;
 let scene;
+
+let grass;
 
 main();
 
@@ -84,13 +87,17 @@ function buildScene() {
         scene.add(vase);
     });
 
-    // -------------- Stream --------------
+    // -------------- Grass -------------
 
-    const stream_geo = new THREE.PlaneGeometry(0.1, 1);
-    const stream_mat = new THREE.MeshBasicMaterial({color: 0xFFFF00});
-    const stream = new THREE.Mesh(stream_geo, stream_mat);
-    stream.position.set(-0.2, -0.05, 0.6);
-    scene.add(stream);
+    grass = new Grass();
+    grass.position.set(0, 1, 0);
+    grass.rotation.set(0, 0.4, 0);
+    scene.add(grass);
+
+    console.log(grass);
+
+    // const ggrass2 = new THREE.Mesh(Grass.grass_geometry, Grass.grass_material);
+
 
 }
 
@@ -110,7 +117,8 @@ function loadBackground() {
 }
 
 
-function tick() {
+function tick(time) {
+    time *= 0.001;
     
     // Handle resizing
     if (resizeRendererToDisplaySize()) {
@@ -118,6 +126,9 @@ function tick() {
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
         camera.updateProjectionMatrix();
     }
+
+    // Animate
+    grass.update(time);
 
     // Update
     controls.update();
