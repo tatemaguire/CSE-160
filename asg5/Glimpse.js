@@ -46,13 +46,13 @@ function buildScene() {
     // ------------ Lighting -------------
 
     const dirLight = new THREE.DirectionalLight(0xEEDDFF, 2);
-    dirLight.position.set(-1, 2, 4);
+    dirLight.position.set(10, 1, 4);
     scene.add(dirLight);
 
-    const ambLight = new THREE.AmbientLight(0xAAAAFF, 0.2);
+    const ambLight = new THREE.AmbientLight(0xAAAAFF, 0.4);
     scene.add(ambLight);
 
-    const vaseLight = new THREE.PointLight(0xFFFF99, 1, 2);
+    const vaseLight = new THREE.PointLight(0xFFFF99, 0.5, 2);
     vaseLight.position.y = 0.5;
 
     // ------------ Meshes -------------
@@ -82,7 +82,6 @@ function buildScene() {
         vase.rotation.set(Math.PI * 0.47, 0, 0.3);
 
         scene.add(vase);
-        // vase.visible = false; //TODO: remove
     });
 
 }
