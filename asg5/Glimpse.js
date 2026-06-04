@@ -14,7 +14,7 @@ let camera;
 let controls;
 let scene;
 
-let grass;
+let grasses = [];
 
 main();
 
@@ -89,15 +89,41 @@ function buildScene() {
 
     // -------------- Grass -------------
 
-    grass = new Grass();
-    grass.position.set(0, 1, 0);
+    let grass = new Grass();
+    grass.position.set(-0.05, 0.85, -0.45);
     grass.rotation.set(0, 0.4, 0);
     scene.add(grass);
+    grasses.push(grass);
 
-    console.log(grass);
+    grass = new Grass();
+    grass.position.set(-0.85, 0.4, 0);
+    scene.add(grass);
+    grasses.push(grass);
 
-    // const ggrass2 = new THREE.Mesh(Grass.grass_geometry, Grass.grass_material);
+    grass = new Grass();
+    grass.position.set(-0.85, 0.4, 0);
+    grass.rotation.set(0, Math.PI / 4, 0);
+    grass.scale.set(2, 2, 2);
+    scene.add(grass);
+    grasses.push(grass);
 
+    grass = new Grass();
+    grass.position.set(0.15, 0.3, 0.4);
+    grass.scale.y = 1.4;
+    scene.add(grass);
+    grasses.push(grass);
+
+    grass = new Grass();
+    grass.position.set(0.05, 0.15, 0.5);
+    grass.rotation.y = -Math.PI / 4
+    scene.add(grass);
+    grasses.push(grass);
+
+    grass = new Grass();
+    grass.position.set(0.5, 0.6, -0.4);
+    grass.scale.set(2, 2, 2);
+    scene.add(grass);
+    grasses.push(grass);
 
 }
 
@@ -128,7 +154,7 @@ function tick(time) {
     }
 
     // Animate
-    grass.update(time);
+    grasses.forEach((grass) => {grass.update(time);});
 
     // Update
     controls.update();
